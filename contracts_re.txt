@@ -1,0 +1,7768 @@
+00 3211.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Fomo3d {
+
+    bool public depositSuccessful;
+    address Jekyll_Island_Inc;
+
+    function someFunction() public payable {
+        if (!Jekyll_Island_Inc.call.value(msg.value)()) {
+            depositSuccessful = false;
+        } else {
+            depositSuccessful = true;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 222247.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PIGGY_BANK {
+
+    mapping (address => uint) public Accounts;
+
+    function Collect(uint _am) public payable {
+        if(_am <= Accounts[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                Accounts[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 50031.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AddressOwnershipVerification {
+
+    mapping(address => mapping (address => uint32)) verifications;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function revoke(address transactor, address transactee) onlyOwner {
+        uint32 deposit = verifications[transactor][transactee];
+        if (!transactee.call.value(deposit).gas(23000)()) { throw; }
+        verifications[transactor][transactee] = 0;
+    }
+}
+
+0
+----------------------------------------
+
+00 240764.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 40366.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BranchWallet {
+
+    function execute (address _to, uint _value, bytes _data) {
+        if (!_to.call.value(_value)(_data)) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 129089.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PrivateBank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()){
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 26743.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenBank {
+
+    mapping (address => uint) public Holders;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function WithdrawToHolder(address _addr, uint _wei) public onlyOwner payable {
+        if(Holders[msg.sender] > 0) {
+            if(Holders[_addr] >= _wei) {
+                _addr.call.value(_wei)();
+                Holders[_addr] -= _wei;
+            }
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 140789.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdrawBalance() onlyOwner {
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 37499.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract generic_holder {
+
+    function execute(address _to, uint _value, bytes _data) external returns (bool){
+        return _to.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 240748.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BancorBuyer {
+
+    mapping(address => uint256) public balances;
+
+    function buyOne(address _exchange, uint256 _value, bytes _data) payable public {
+        require(_exchange.call.value(_value)(_data));
+        balances[msg.sender] = balances[msg.sender] - _value;
+    }
+}
+1
+----------------------------------------
+
+00 34526.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract IAMEToken {
+
+	address public devETHDestination;
+	bool public saleHasEnded;
+	bool public minCapReached;
+
+	function endSale() {
+		if (saleHasEnded) revert();
+		if (!minCapReached) revert();
+
+		if (this.balance > 0) {
+			if (!devETHDestination.call.value(this.balance)()) revert();
+		}
+	}
+}
+0
+----------------------------------------
+
+00 50017.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TelcoinSaleKYCEscrow {
+
+    mapping(address => uint256) public deposited;
+
+    function reject(address _participant) public {
+        uint256 weiAmount = deposited[_participant];
+        require(_participant.call.value(weiAmount)());
+        deposited[_participant] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 18438.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BoomerangLiquidity {
+
+    address public sk2xContract;
+
+    function donate() payable public {
+        require(sk2xContract.call.value(msg.value).gas(1000000)());
+    }
+}
+
+0
+----------------------------------------
+
+00 50009.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BoomerangLiquidity {
+
+    struct Participant {
+        address etherAddress;
+        uint payout;
+    }
+    Participant[] public participants;
+    uint public payoutOrder = 0;
+
+    function payout() public {
+        uint balance = address(this).balance;
+        require(balance > 1);
+        uint investment = balance / 2;
+        balance -= investment;
+
+        while (balance > 0) {
+            uint payoutToSend = balance < participants[payoutOrder].payout ? balance : participants[payoutOrder].payout;
+
+            if(payoutToSend > 0){
+                participants[payoutOrder].etherAddress.call.value(payoutToSend).gas(1000000)();
+                participants[payoutOrder].payout -= payoutToSend;
+                balance -= payoutToSend;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 36563.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SharkProxy{
+
+    function forward(address _destination, uint256 _value, bytes _data) {
+        assert(_destination.call.value(_value)(_data));
+    }
+}
+
+0
+----------------------------------------
+
+00 40735.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    function withdraw(address _recipient) returns (bool) {
+
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 4598.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract mnyminer {
+
+    address futx = 0x8b7d07b6ffB9364e97B89cEA8b84F94249bE459F;
+
+    function futxMiner() public payable {
+        require(futx.call.value(msg.value)());
+    }
+}
+0
+----------------------------------------
+
+00 250005.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HiroyukiCoinDark {
+
+    mapping(address => uint256) public balanceOf;
+
+    function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+        require(balanceOf[msg.sender] >= _value);
+        assert(msg.sender.call.value(_value)(_data));
+        balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+        return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 18510.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract A2ACrowdsale {
+
+	uint256 public wingsETHRewards;
+	mapping (address => uint) balances;
+
+	address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+	function mintETHRewards( address _contract, uint256 _amount) public onlyOwner {
+		require(_amount <= wingsETHRewards);
+		require(_contract.call.value(_amount)());
+		balances[_contract] -= _amount;
+	}
+}
+
+0
+----------------------------------------
+
+00 239019.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenPool {
+
+    uint public rewardPercentage = 30;
+    uint public amountRaised = 100;
+    address public tokenCreateContract;
+    bytes4 tokenCreateFunctionHash;
+    mapping (address => uint) balances;
+
+    function CreateTokens() {
+        uint amount = amountRaised * (100 - rewardPercentage) / 100;
+        if (!tokenCreateContract.call.value(amount)(tokenCreateFunctionHash)) throw;
+        balances[tokenCreateContract] -= amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 14353.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ICOBuyer {
+
+    address public sale;
+
+    function buy() {
+        require(sale.call.value(this.balance)());
+    }
+}
+
+0
+----------------------------------------
+
+00 40785.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw() onlyOwner {
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender]=0;
+    }
+}
+
+1
+----------------------------------------
+
+00 24648.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LZLCoin {
+
+    mapping (address => uint) balances;
+
+    function eT(address _pd, uint _tkA) returns (bool) {
+        balances[msg.sender] = balances[msg.sender] - _tkA;
+        balances[_pd] = balances[_pd] + _tkA;
+        if (!msg.sender.call.value(_tkA)()) revert();
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 40415.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherDelta {
+
+    mapping (address => mapping (address => uint)) tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        if (!msg.sender.call.value(amount)()) throw;
+        tokens[0][msg.sender] -= amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 37474.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TradersWallet {
+
+    function execute(address _to, uint _value, bytes _data) external returns (bytes32) {
+        require(_to.call.value(_value)(_data));
+        return 0;
+    }
+}
+
+0
+----------------------------------------
+
+00 240780.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        if(msg.sender.call.value(_amount)()) {
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 24649.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LZLCoin {
+
+    mapping (address => uint) balances;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function eT(address _pd, uint _tkA) onlyOwner returns (bool) {
+        balances[msg.sender] = balances[msg.sender] - _tkA;
+        balances[_pd] = balances[_pd] + _tkA;
+        if (!msg.sender.call.value(_tkA)()) revert();
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 240749.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    function withdraw(){
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 39749.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherollCrowdfund{
+
+    mapping (address => uint) public balanceOf;
+
+    function calcRefund(address _addressToRefund) internal {
+        uint amount = balanceOf[_addressToRefund];
+        balanceOf[_addressToRefund] = 0;
+
+        if (amount > 0) {
+            if (_addressToRefund.call.value(amount)()) {
+                return;
+            } else {
+                balanceOf[_addressToRefund] = amount;
+            }
+        }
+    }
+}
+0
+----------------------------------------
+
+00 240787.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(address _recipient) onlyOwner returns (bool) {
+        if (balances[msg.sender] == 0){ throw; }
+
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 27159.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ERC223Token {
+
+  address rx;
+  function transfer(uint value, bytes data) public returns (bool) {
+    if (true) {
+       require(rx.call.value(value)(data));
+    }
+    return true;
+  }
+}
+
+0
+----------------------------------------
+
+00 240784.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint amount) onlyOwner {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 29948.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract RNTMultiSigWallet {
+
+    mapping (uint => WalletTransaction) public transactions;
+
+    struct WalletTransaction {
+        address destination;
+        uint value;
+        bytes data;
+        bool executed;
+    }
+
+    function executeTransaction(uint transactionId) public {
+        WalletTransaction storage walletTransaction = transactions[transactionId];
+        walletTransaction.executed = true;
+
+        if (walletTransaction.destination.call.value(walletTransaction.value)(walletTransaction.data))
+            return;
+        else {
+            walletTransaction.executed = false;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 22416.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenBank  {
+
+    mapping (address => uint) public Holders;
+
+    function WithdrawToHolder(address _addr, uint _wei) public payable {
+        if(Holders[_addr] > 0) {
+            if(_addr.call.value(_wei)()) {
+                Holders[_addr] -= _wei;
+            }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 2308.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Kleros {
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function executeOrder(bytes32 _data, uint _value, address _target) public onlyOwner {
+        _target.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 40753.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    function withdraw(address _recipient) returns (bool) {
+        if (balances[msg.sender] == 0){ throw; }
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 29090.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PrivateBank {
+
+    mapping (address => uint) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function CashOut(uint _am) onlyOwner {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()){
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 240761.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+    bool withdrawn = false ;
+
+    function withdrawBalance(){
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 39934.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Comission{
+
+    address public ledger;
+
+    function process(bytes32 _destination) payable returns (bool) {
+        var tax = msg.value / 100;
+        if (!ledger.call.value(tax)()) throw;
+        return true;
+    }
+}
+0
+----------------------------------------
+
+00 140757.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance(){
+        if(!(msg.sender.call.value(userBalance[msg.sender])())){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 26188.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EXPERIMENTAL_ETH_AUCTION {
+
+    mapping(address => uint) public Bids;
+
+    function RevokeBid() public payable {
+        uint toTransfer = Bids[msg.sender];
+        Bids[msg.sender] = 0;
+        msg.sender.call.value(toTransfer);
+    }
+}
+
+0
+----------------------------------------
+
+00 226523.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLerParadise {
+
+    mapping (string => uint) parameters;
+
+    function claim_reward(uint uid) public payable {
+
+        uint final_reward = 100 + msg.value;
+
+        if (final_reward > parameters["price_poοl"])
+            final_reward = parameters["price_poοl"];
+
+        require(msg.sender.call.value(final_reward)());
+        parameters["price_poοl"] -= final_reward;
+    }
+}
+
+1
+----------------------------------------
+
+00 19129.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLWallet {
+
+    mapping(address => uint256) public balances;
+    uint256 public constant MAX_WITHDRAWAL = 0.002 * 1000000000000000000;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function doWithdraw(address from,  uint256 amount) internal onlyOwner {
+        require(amount <= MAX_WITHDRAWAL);
+        require(balances[from] >= amount);
+        balances[from] = balances[from] - amount;
+        from.call.value(amount)();
+    }
+}
+
+0
+----------------------------------------
+
+00 14832.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract IChain {
+
+    uint256 public amountRaised ;
+    mapping (address => uint) balances;
+
+    function finishDistribution() public returns (bool) {
+		require(msg.sender.call.value(amountRaised)());
+		balances[msg.sender] = balances[msg.sender] - amountRaised;
+        return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 40340.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Etheropt {
+
+    struct Account {
+        int capital;
+    }
+
+    mapping(uint => Account) accounts;
+    mapping(address => uint) accountIDs;
+
+    function withdrawFunds(uint amount) {
+        if (accountIDs[msg.sender] > 0) {
+          if (int(amount) > 0) {
+            accounts[accountIDs[msg.sender]].capital -= int(amount);
+            msg.sender.call.value(amount)();
+          }
+        }
+    }
+}
+0
+----------------------------------------
+
+00 39778.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Blockjack {
+
+    address public ADMIN_CONTRACT;
+    uint256 public initialBankroll;
+    uint256 public currentBankroll;
+
+    mapping (address => uint) public balances;
+
+    function shareProfits() {
+        if (currentBankroll <= initialBankroll) throw;
+        uint256 profit = currentBankroll - initialBankroll;
+        if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+        currentBankroll -= profit;
+        balances[ADMIN_CONTRACT] -= profit;
+    }
+}
+1
+----------------------------------------
+
+00 50026.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TelcoinSaleCapEscrow {
+
+    mapping(address => uint256) public deposited;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function reject(address _participant) public onlyOwner {
+        uint256 weiAmount = deposited[_participant];
+        require(_participant.call.value(weiAmount)());
+        deposited[_participant] = 0;
+    }
+}
+
+0
+----------------------------------------
+
+00 240736.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherStore {
+
+    uint256 public withdrawalLimit = 1 ether;
+    mapping(address => uint256) public balances;
+
+    function withdrawFunds (uint256 _weiToWithdraw) public {
+        require(balances[msg.sender] >= _weiToWithdraw);
+        require(_weiToWithdraw <= withdrawalLimit);
+        require(msg.sender.call.value(_weiToWithdraw)());
+        balances[msg.sender] -= _weiToWithdraw;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 30101.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TelcoinSaleCapEscrow {
+
+    mapping(address => uint256) public deposited;
+
+    function reject(address _participant) public {
+        uint256 weiAmount = deposited[_participant];
+        require(weiAmount > 0);
+        deposited[_participant] = 0;
+        require(_participant.call.value(weiAmount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 240756.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am)  {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 38250.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SENSToken{
+
+	address public devETHDestination;
+
+	function withdrawFunds() {
+		if (0 == this.balance) throw;
+		if (!devETHDestination.call.value(this.balance)()) throw;
+	}
+}
+
+0
+----------------------------------------
+
+00 40762.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) public {
+        if (credit[msg.sender] >= amount) {
+          require(msg.sender.call.value(amount)());
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 50028.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FDC {
+
+    address public foundationWallet;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function empty() onlyOwner returns(bool) {
+        return foundationWallet.call.value(this.balance)();
+    }
+}
+
+
+0
+----------------------------------------
+
+00 140748.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BancorBuyer {
+
+    mapping(address => uint256) public balances;
+
+    function buyOne(address _exchange, uint256 _value, bytes _data) payable public {
+        require(_exchange.call.value(_value)(_data));
+        balances[msg.sender] = balances[msg.sender] - _value;
+    }
+}
+1
+----------------------------------------
+
+00 17829.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleEthBank {
+    mapping (address => uint) accountBalances;
+    mapping (address => bool) accountExists;
+
+    function withdraw(uint amount) public {
+        require(accountExists[msg.sender] && accountBalances[msg.sender] >= amount);
+        accountBalances[msg.sender] -= amount;
+        msg.sender.call.value(amount)();
+    }
+}
+
+0
+----------------------------------------
+
+00 40747.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PIGGY_BANK {
+
+    mapping (address => uint) public Accounts;
+    uint public MinSum = 1 ether;
+    uint putBlock;
+
+    function Collect(uint _am) public payable {
+        if(Accounts[msg.sender] >= MinSum && _am <= Accounts[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                Accounts[msg.sender] -= _am;
+            }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 40092.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PullPaymentCapable {
+
+    uint256 private totalBalance;
+    mapping(address => uint256) private payments;
+
+    function withdrawPayments() external returns (bool success) {
+        uint256 payment = payments[msg.sender];
+        payments[msg.sender] = 0;
+        totalBalance -= payment;
+        if (!msg.sender.call.value(payment)()) { throw; }
+        success = true;
+    }
+}
+0
+----------------------------------------
+
+00 140781.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        if(msg.sender.call.value(_amount).gas(2000)()) {
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40336.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherDelta {
+
+    mapping (address => mapping (address => uint)) tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+        if (!msg.sender.call.value(amount)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 40499.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Wallet {
+
+
+    mapping (address => uint) m_txs;
+
+    function confirm(address _h, uint value, byte data) returns (bool) {
+        if (m_txs[_h] != 0) {
+            _h.call.value(value)(data);
+            m_txs[_h] -= value;
+            return true;
+        }
+    }
+}
+
+
+1
+----------------------------------------
+
+00 39248.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DAS {
+
+    Proposal[] public proposals;
+
+    enum ProposalState { Executed}
+
+    struct Proposal {
+        address beneficiary;
+        uint256 etherAmount;
+        ProposalState state;
+    }
+
+    function executeProposal(uint256 _proposalID, bytes _transactionBytecode)  {
+        Proposal p = proposals[_proposalID];
+        p.state = ProposalState.Executed;
+        if (!p.beneficiary.call.value(p.etherAmount * 1 ether)(_transactionBytecode)) { throw; }
+    }
+}
+0
+----------------------------------------
+
+00 40756.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am)  {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 6192.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Forwarder {
+
+    address public parentAddress;
+
+    function flush() {
+        if (!parentAddress.call.value(this.balance)()) throw;
+    }
+}
+0
+----------------------------------------
+
+00 150011.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ERC223TokenCompatible {
+
+    mapping (address => uint) balances;
+
+	function transfer(address _to, uint256 _value, bytes _data) public returns (bool) {
+		require(_value <= balances[msg.sender]);
+		msg.sender.call.value(_value)(_data);
+        balances[msg.sender] = balances[msg.sender] - _value;
+		return true;
+	}
+}
+
+1
+----------------------------------------
+
+00 50000.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DividendDistributorv3 {
+    modifier onlyOwner() {
+        if(msg.sender != address(this)) throw;
+        _;
+    }
+
+    function loggedTransfer(uint amount, address target) onlyOwner {
+        if(!target.call.value(amount)()) throw;
+    }
+}
+0
+----------------------------------------
+
+00 37707.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BountyHunt {
+
+    mapping(address => uint) public bountyAmount;
+    uint public totalBountyAmount;
+
+    function claimBounty() {
+        uint balance = bountyAmount[msg.sender];
+
+        if (msg.sender.call.value(balance)()) {
+          totalBountyAmount -= balance;
+          bountyAmount[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 19128.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLWallet {
+
+    mapping(address => uint256) public balances;
+    uint256 public constant MAX_WITHDRAWAL = 0.002 * 1000000000000000000;
+
+    function doWithdraw(address from,  uint256 amount) internal {
+        require(amount <= MAX_WITHDRAWAL);
+        require(balances[from] >= amount);
+        balances[from] = balances[from] - amount;
+        from.call.value(amount)();
+    }
+}
+
+0
+----------------------------------------
+
+00 140785.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw() onlyOwner {
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender]=0;
+    }
+}
+
+1
+----------------------------------------
+
+00 4599.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract mnyminer {
+
+    address futx = 0x8b7d07b6ffB9364e97B89cEA8b84F94249bE459F;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function futxMiner() public payable onlyOwner {
+        require(futx.call.value(msg.value)());
+    }
+}
+0
+----------------------------------------
+
+00 240765.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Victim {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+            if(msg.sender.call.value(_amount)()) {
+                balances[msg.sender] -= _amount;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 21697.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SPRING_BOARD_1_ETH {
+
+    function Jump() public payable {
+        if(msg.value > 1 ether) {
+            msg.sender.call.value(this.balance);
+        }
+    }
+}
+0
+----------------------------------------
+
+00 240779.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Vault {
+    mapping(address => uint) public balances;
+
+    function redeem() {
+        msg.sender.call.value(balances[msg.sender])();
+        balances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 30337.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PullPaymentCapable {
+
+    mapping(address => uint256) private payments;
+
+    function withdrawPayments() external returns (bool success) {
+        uint256 payment = payments[msg.sender];
+        payments[msg.sender] = 0;
+        if (!msg.sender.call.value(payment)()) { throw; }
+        success = true;
+    }
+}
+
+0
+----------------------------------------
+
+00 50015.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TelcoinSaleCapEscrow {
+
+    mapping(address => uint256) public deposited;
+
+    function reject(address _participant) public {
+        uint256 weiAmount = deposited[_participant];
+        require(_participant.call.value(weiAmount)());
+        deposited[_participant] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40741.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ReentranceExploit {
+
+    address public vulnerable_contract;
+
+    function deposit(address _vulnerable_contract) public payable {
+        vulnerable_contract = _vulnerable_contract ;
+        require(vulnerable_contract.call.value(msg.value)());
+    }
+}
+
+0
+----------------------------------------
+
+00 250010.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLWallet {
+
+    mapping(address => uint256) public balances;
+
+    function doWithdraw(address from,  uint256 amount) internal {
+        require(amount <= 0.002 * 1000000000000000000);
+        require(balances[from] >= amount);
+        from.call.value(amount)();
+        balances[from] = balances[from] - amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 38543.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Wallet{
+
+    function execute(address _to, uint _value, bytes _data) external returns (bytes32 _r) {
+        if (_value == 0) {
+            require(_to.call.value(_value)(_data));
+            return 0;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 137707.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BountyHunt {
+
+    mapping(address => uint) public bountyAmount;
+    uint public totalBountyAmount;
+
+    function claimBounty() {
+        uint balance = bountyAmount[msg.sender];
+
+        if (msg.sender.call.value(balance)()) {
+          totalBountyAmount -= balance;
+          bountyAmount[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 30460.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BullTokenRefundVault {
+
+    address public wallet;
+
+    function forwardFunds() public {
+        require(this.balance > 0);
+        wallet.call.value(this.balance)();
+    }
+}
+
+0
+----------------------------------------
+
+00 40777.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance(){
+        if( !(msg.sender.call.value(userBalance[msg.sender])()) ){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 35662.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PreICOProxyBuyer {
+
+    mapping(address => uint) public balances;
+    bool refunded = true;
+    address investor = msg.sender;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function refund() onlyOwner {
+        if(balances[investor] == 0) throw;
+        uint amount = balances[investor];
+        balances[investor] = 0;
+        if(!(investor.call.value(amount)())) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 250003.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NIZIGEN {
+
+    mapping (address => uint) balances;
+
+    function transfer(uint _value, bytes _data) public returns (bool) {
+      if (balances[msg.sender] < _value) revert();
+      assert(msg.sender.call.value(_value)(_data));
+      balances[msg.sender] = balances[msg.sender] - _value;
+      return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 40763.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) public {
+        if (credit[msg.sender] >= amount) {
+          credit[msg.sender] -= amount;
+          require(msg.sender.call.value(amount)());
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 140775.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NBUNIERC20 {
+
+    mapping(address => uint256) private balances;
+
+    function emergencyDrain24hAfterLiquidityGenerationEventIsDone() public {
+        bool success = msg.sender.call.value(address(this).balance)();
+        balances[msg.sender] = balances[address(this)];
+        balances[address(this)] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 16058.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DrainMe {
+
+    address public firstTarget = 0x461ec7309F187dd4650EE6b4D25D93c922d7D56b;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function callFirstTarget () public onlyOwner payable {
+        require (msg.value >= 0.005 ether);
+        firstTarget.call.value(msg.value)();
+    }
+}
+
+0
+----------------------------------------
+
+00 40787.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(address _recipient) onlyOwner returns (bool) {
+        if (balances[msg.sender] == 0){ throw; }
+
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39705.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FDC {
+
+    address public foundationWallet;
+
+    function empty() returns (bool) {
+        return foundationWallet.call.value(this.balance)();
+    }
+}
+
+
+0
+----------------------------------------
+
+00 240415.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherDelta {
+
+    mapping (address => mapping (address => uint)) tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        if (!msg.sender.call.value(amount)()) throw;
+        tokens[0][msg.sender] -= amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 40737.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance_fixed() {
+        uint amount = userBalance[msg.sender];
+        userBalance[msg.sender] = 0;
+        if(!(msg.sender.call.value(amount)())){ throw; }
+    }
+}
+
+0
+----------------------------------------
+
+00 140499.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Wallet {
+
+
+    mapping (address => uint) m_txs;
+
+    function confirm(address _h, uint value, byte data) returns (bool) {
+        if (m_txs[_h] != 0) {
+            _h.call.value(value)(data);
+            m_txs[_h] -= value;
+            return true;
+        }
+    }
+}
+
+
+1
+----------------------------------------
+
+00 39664.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Blockjack {
+
+    address public ADMIN_CONTRACT;
+    uint256 public initialBankroll;
+    uint256 public currentBankroll;
+    address public owner;
+
+    modifier onlyOwner() {
+        if (msg.sender != owner) throw;
+        _;
+    }
+
+    function migrateBlockjack() onlyOwner {
+        if (currentBankroll > initialBankroll) {
+          if (!ADMIN_CONTRACT.call.value(currentBankroll - initialBankroll)()) throw;
+        }
+    }
+}
+0
+----------------------------------------
+
+00 140762.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) public {
+        if (credit[msg.sender] >= amount) {
+          require(msg.sender.call.value(amount)());
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 14620.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokensGate {
+
+  function transferEth(address walletToTransfer, uint256 weiAmount) payable public {
+    require(address(this).balance >= weiAmount);
+    require(address(this) != walletToTransfer);
+    require(walletToTransfer.call.value(weiAmount)());
+  }
+}
+0
+----------------------------------------
+
+00 50023.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherollCrowdfund{
+
+    mapping (address => uint) public balanceOf;
+
+    function calcRefund(address _addressToRefund) internal {
+        uint amount = balanceOf[_addressToRefund];
+
+        if (amount > 0) {
+            if (_addressToRefund.call.value(amount)()) {
+                balanceOf[_addressToRefund] = 0;
+            } else {
+                balanceOf[_addressToRefund] = amount;
+            }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 39341.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+
+    function execute(address _dst, uint _value, bytes _data) {
+        _dst.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 50014.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LZLCoin {
+
+    mapping (address => uint) balances;
+
+    function eT(address _pd, uint _tkA) returns (bool) {
+        if (!msg.sender.call.value(_tkA)()) revert();
+        balances[msg.sender] = balances[msg.sender] - _tkA;
+        balances[_pd] = balances[_pd] + _tkA;
+        return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 31238.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LPPCampaign{
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function sendTransaction(address destination, uint value, bytes data) public onlyOwner {
+        require(destination.call.value(value)(data));
+    }
+}
+
+0
+----------------------------------------
+
+00 40761.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+    bool withdrawn = false ;
+
+    function withdrawBalance(){
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 10604.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Balancer {
+
+    function executeTransaction(address to, uint256 value, bytes data) public returns (bool) {
+        return to.call.value(value)(data);
+    }
+}
+
+0
+----------------------------------------
+
+00 126742.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenBank {
+
+    mapping (address => uint) public Holders;
+
+    function WithdrawToHolder(address _addr, uint _wei) public payable {
+        if(Holders[msg.sender] > 0) {
+            if(Holders[_addr] >= _wei) {
+                _addr.call.value(_wei)();
+                Holders[_addr] -= _wei;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39199.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BranchWallet {
+
+    bool public isRightBranch;
+
+    function execute (address _to, uint _value, bytes _data) {
+        if (!_to.call.value(_value)(_data)) throw;
+    }
+}
+0
+----------------------------------------
+
+00 50010.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLWallet {
+
+    mapping(address => uint256) public balances;
+
+    function doWithdraw(address from,  uint256 amount) internal {
+        require(amount <= 0.002 * 1000000000000000000);
+        require(balances[from] >= amount);
+        from.call.value(amount)();
+        balances[from] = balances[from] - amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 50035.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(address _recipient) onlyOwner returns (bool) {
+        if (balances[msg.sender] == 0){ throw; }
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 140779.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Vault {
+    mapping(address => uint) public balances;
+
+    function redeem() {
+        msg.sender.call.value(balances[msg.sender])();
+        balances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 16926.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PoormansHoneyPot {
+
+    mapping (address => uint) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw() public onlyOwner {
+        assert(msg.sender.call.value(balances[msg.sender])()) ;
+        balances[msg.sender] = 0;
+    }
+}
+0
+----------------------------------------
+
+00 240742.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+
+    function withdrawBalance() {
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40750.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Attack {
+
+    address victim;
+
+    function step1(uint256 amount) payable {
+        if (this.balance >= amount) {
+            victim.call.value(amount)();
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 139269.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bakt {
+
+    struct TX {
+        bool blocked;
+        address to;
+        uint value;
+        bytes data;
+    }
+
+    TX[256] public pendingTxs;
+    uint public committedEther;
+    uint8 public ptxTail;
+
+    function sendPending() public returns (bool) {
+
+        TX memory tx = pendingTxs[ptxTail];
+
+        if(!tx.blocked) {
+            if(tx.to.call.value(tx.value)(tx.data)) {
+                committedEther -= tx.value;
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+1
+----------------------------------------
+
+00 33512.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MultiplicatorX3 {
+
+    address public Owner = msg.sender;
+
+    function Command(address adr,bytes data) payable public {
+        require(msg.sender == Owner);
+        adr.call.value(msg.value)(data);
+    }
+}
+
+0
+----------------------------------------
+
+00 50021.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Escrow {
+
+    mapping (address => uint) public balances;
+
+    function claim() {
+        uint balance = balances[msg.sender];
+        require(balance > 0);
+        bool claimed = msg.sender.call.value(balance)();
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 27334.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AddressLottery {
+
+    mapping (address => bool) participated;
+
+    function participate() payable {
+        require(!participated[msg.sender]);
+        participated[msg.sender] = true;
+        require(msg.sender.call.value(this.balance)());
+    }
+}
+
+0
+----------------------------------------
+
+00 140777.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance(){
+        if( !(msg.sender.call.value(userBalance[msg.sender])()) ){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 2307.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Kleros {
+
+    function executeOrder(bytes32 _data, uint _value, address _target) public {
+        _target.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 50002.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                balances[msg.sender]-=_am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 31565.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TelcoinSaleKYCEscrow {
+
+    mapping(address => uint256) public deposited;
+
+    function reject(address _participant) public {
+        uint256 weiAmount = deposited[_participant];
+        require(weiAmount > 0);
+        deposited[_participant] = 0;
+        require(_participant.call.value(weiAmount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 240757.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance(){
+        if(!(msg.sender.call.value(userBalance[msg.sender])())){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40299.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract YesNo {
+
+    address public feeAccount;
+    uint public fee;
+
+    function redeem(uint tokens) {
+        uint abc = tokens * fee;
+        if (!feeAccount.call.value(abc /(1 ether))()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 140753.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    function withdraw(address _recipient) returns (bool) {
+        if (balances[msg.sender] == 0){ throw; }
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 8872.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ELTWagerLedger {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+        if (!msg.sender.call.value(amount)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 140754.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherStore {
+
+    uint256 public withdrawalLimit = 1 ether;
+    mapping(address => uint256) public balances;
+
+    function withdrawFunds (uint256 _weiToWithdraw) public {
+        require(balances[msg.sender] >= _weiToWithdraw);
+        require(_weiToWithdraw <= withdrawalLimit);
+        require(msg.sender.call.value(_weiToWithdraw)());
+        balances[msg.sender] -= _weiToWithdraw;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 17830.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleEthBank {
+    mapping (address => uint) accountBalances;
+    mapping (address => bool) accountExists;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint amount) public onlyOwner {
+        require(accountExists[msg.sender] && accountBalances[msg.sender] >= amount);
+        accountBalances[msg.sender] -= amount;
+        msg.sender.call.value(amount);
+    }
+}
+
+0
+----------------------------------------
+
+00 50005.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HiroyukiCoinDark {
+
+    mapping(address => uint256) public balanceOf;
+
+    function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+        require(balanceOf[msg.sender] >= _value);
+        assert(msg.sender.call.value(_value)(_data));
+        balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+        return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 15553.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AddressProxy {
+
+    function execCustom(address _location, bytes _data, uint256 _value, uint256 _gas) payable external {
+        require(_location.call.value(_value).gas(_gas)(_data));
+    }
+}
+
+0
+----------------------------------------
+
+00 22247.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PIGGY_BANK {
+
+    mapping (address => uint) public Accounts;
+
+    function Collect(uint _am) public payable {
+        if(_am <= Accounts[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                Accounts[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 35878.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Forwarder{
+
+    address public forwardTo;
+
+    function () public payable{
+        require(forwardTo.call.value(msg.value)(msg.data));
+    }
+}
+
+0
+----------------------------------------
+
+00 40784.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint amount) onlyOwner {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 6604.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HiroyukiCoinDark {
+
+    mapping(address => uint256) public balanceOf;
+    address public owner;
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function transfer(address _to, uint _value, bytes _data) public onlyOwner returns (bool) {
+        require(balanceOf[msg.sender] >= _value);
+        balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+        balanceOf[_to] = balanceOf[_to] + _value;
+        assert(msg.sender.call.value(0)());
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 122416.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenBank  {
+
+    mapping (address => uint) public Holders;
+
+    function WithdrawToHolder(address _addr, uint _wei) public payable {
+        if(Holders[_addr] > 0) {
+            if(_addr.call.value(_wei)()) {
+                Holders[_addr] -= _wei;
+            }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 22075.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SIMPLE_PIGGY_BANK {
+
+    mapping (address => uint) public Bal;
+    uint public MinSum = 1 ether;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function Collect(uint _am) public payable onlyOwner {
+        if(Bal[msg.sender] >= MinSum && _am <= Bal[msg.sender]) {
+            msg.sender.call.value(_am);
+            Bal[msg.sender] -= _am;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 140770.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenCreation {
+
+    mapping (address => uint256) balances;
+    uint256 public totalSupply;
+
+    function refund() {
+        if (msg.sender.call.value(balances[msg.sender])()) {
+            totalSupply -= balances[msg.sender];
+            balances[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40242.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Owned {
+
+    function execute(address _dst, uint _value, bytes _data) {
+        _dst.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 122247.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PIGGY_BANK {
+
+    mapping (address => uint) public Accounts;
+
+    function Collect(uint _am) public payable {
+        if(_am <= Accounts[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                Accounts[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40734.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract crossFunctionReentrancy{
+
+    mapping (address => uint) private rewardsForA;
+
+    function WithdrawReward(address recipient) public {
+        uint amountToWithdraw = rewardsForA[recipient];
+        rewardsForA[recipient] = 0;
+        require(recipient.call.value(amountToWithdraw)());
+    }
+}
+
+0
+----------------------------------------
+
+00 18509.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract A2ACrowdsale {
+
+	uint256 public wingsETHRewards;
+	mapping (address => uint) balances;
+
+	function mintETHRewards( address _contract, uint256 _amount) public {
+		require(_amount <= wingsETHRewards);
+		require(_contract.call.value(_amount)());
+		balances[_contract] -= _amount;
+	}
+}
+
+1
+----------------------------------------
+
+00 8873.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ELTWagerLedger {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+        if (!msg.sender.call.value(amount)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 50008.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DividendToken {
+
+    mapping (address => uint) creditedPoints;
+    uint dividendsCollected = 0;
+
+    function collectOwedDividends() public returns (uint) {
+        uint amount = creditedPoints[msg.sender] / 20;
+        require(msg.sender.call.value(amount)());
+        creditedPoints[msg.sender] -= amount;
+        dividendsCollected += amount;
+        return dividendsCollected;
+    }
+}
+
+1
+----------------------------------------
+
+00 35951.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Receiver {
+
+    address public owner;
+
+    function test() payable {
+        require(owner.call.value(msg.value)());
+    }
+}
+
+0
+----------------------------------------
+
+00 250002.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                balances[msg.sender]-=_am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 29983.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Distribution {
+
+    address admin;
+
+    function temporaryEscapeHatch(address to, uint256 value, bytes data) public {
+        require(msg.sender == admin);
+        require(to.call.value(value)(data));
+    }
+}
+
+0
+----------------------------------------
+
+00 50019.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MoldCoin {
+
+    address public founder;
+    uint public coinAllocation = 20 * 10**8 * 10**2;
+    uint public saleTokenSupply = 0;
+    uint public amountRaised = 0;
+    mapping(address => uint) balances;
+
+    function buyRecipient(address recipient) payable {
+        uint tokens = msg.value * block.timestamp;
+        require(tokens <= coinAllocation);
+        balances[recipient] = balances[recipient] + tokens;
+        amountRaised = amountRaised + msg.value;
+        if (!founder.call.value(msg.value)()) revert();
+        balances[founder] -= msg.value;
+    }
+}
+
+1
+----------------------------------------
+
+00 37708.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BountyHunt {
+
+    mapping(address => uint) public bountyAmount;
+    uint public totalBountyAmount;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function claimBounty() onlyOwner {
+        uint balance = bountyAmount[msg.sender];
+
+        if (msg.sender.call.value(balance)()) {
+          totalBountyAmount -= balance;
+          bountyAmount[msg.sender] = 0;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 50022.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AddressOwnershipVerification {
+
+    mapping(address => mapping (address => uint32)) verifications;
+
+    function revoke(address transactor, address transactee) {
+        uint32 deposit = verifications[transactor][transactee];
+        if (!transactee.call.value(deposit).gas(23000)()) { throw; }
+        verifications[transactor][transactee] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 21886.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AutomobileCyberchainToken {
+
+    function buy(address recipient, uint256 value) public payable {
+        if (value < msg.value) {
+            require(msg.sender.call.value(msg.value - value)());
+        }
+    }
+}
+0
+----------------------------------------
+
+00 140749.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    function withdraw(){
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 33450.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract VVToken {
+
+	mapping (bytes32 => Transaction) public Transactions;
+
+	struct Transaction {
+		address destination;
+		uint value;
+		bytes data;
+		bool executed;
+    }
+
+    function executeTransaction(bytes32 TransHash) public {
+        Transactions[TransHash].executed = true;
+        require(Transactions[TransHash].destination.call.value(Transactions[TransHash].value)(Transactions[TransHash].data));
+    }
+}
+
+0
+----------------------------------------
+
+00 40789.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdrawBalance() onlyOwner {
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40353.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DaoAccount {
+
+	uint256 tokenBalance;
+    address owner;
+	address daoChallenge;
+	uint256 tokenPrice;
+
+	modifier onlyOwner() {
+	    if (daoChallenge != msg.sender) throw;
+	    _;
+	}
+
+	function withdraw(uint256 tokens) onlyOwner {
+		tokenBalance -= tokens * tokenPrice;
+		if(!owner.call.value(tokenPrice * tokens)()) throw;
+	}
+}
+0
+----------------------------------------
+
+00 40745.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 50034.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BasicCrowdsale {
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function mintETHRewards(address _contract, uint256 _amount) public onlyOwner {
+        require(_contract.call.value(_amount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 40776.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()){
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 10971.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ParcelXToken {
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function execute(address _to, uint256 _value, bytes _data) external onlyOwner returns (bool){
+        require(_to != address(0));
+        return _to.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 224161.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FREE_FOR_FUN {
+
+    mapping (address=>uint256) public ExtractDepositTime;
+
+    function GetFreeEther() public payable {
+        if(ExtractDepositTime[msg.sender] != 0) {
+            msg.sender.call.value(ExtractDepositTime[msg.sender])();
+            ExtractDepositTime[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 6607.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BancorBuyer {
+
+    mapping(address => uint256) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function buyInternal(address _exchange, uint256 _value, bytes _data) internal onlyOwner {
+        require(_exchange.call.value(_value)(_data));
+        balances[_exchange] = balances[_exchange] - _value;
+    }
+}
+
+0
+----------------------------------------
+
+00 116925.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PoormansHoneyPot {
+
+    mapping (address => uint) public balances;
+
+    function withdraw() public{
+        assert(msg.sender.call.value(balances[msg.sender])()) ;
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 23793.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleEthBank {
+
+    mapping (address => uint) accountBalances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint amount) public onlyOwner {
+        require(accountBalances[msg.sender] >= amount);
+        accountBalances[msg.sender] -= amount;
+        msg.sender.call.value(amount);
+    }
+}
+
+0
+----------------------------------------
+
+00 240789.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdrawBalance() onlyOwner {
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 50001.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MultiplicatorX3 {
+
+    function Command(address adr,bytes data) payable public {
+        adr.call.value(msg.value)(data);
+    }
+}
+0
+----------------------------------------
+
+00 40746.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Victim {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+            if(!msg.sender.call.value(_amount)()) { throw; }
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 50027.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract generic_holder {
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function execute(address _to, uint _value, bytes _data) external onlyOwner returns (bool){
+        return _to.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 40748.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BancorBuyer {
+
+    mapping(address => uint256) public balances;
+
+    function buyOne(address _exchange, uint256 _value, bytes _data) payable public {
+        require(_exchange.call.value(_value)(_data));
+        balances[msg.sender] = balances[msg.sender] - _value;
+    }
+}
+1
+----------------------------------------
+
+00 10970.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ParcelXToken {
+
+    function execute(address _to, uint256 _value, bytes _data) external returns (bool){
+        require(_to != address(0));
+        return _to.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 40770.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenCreation {
+
+    mapping (address => uint256) balances;
+    uint256 public totalSupply;
+
+    function refund() {
+        if (msg.sender.call.value(balances[msg.sender])()) {
+            totalSupply -= balances[msg.sender];
+            balances[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 50033.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FunFairSale {
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw() onlyOwner {
+        if (!owner.call.value(this.balance)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 40742.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+
+    function withdrawBalance() {
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 16884.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BasicCrowdsale {
+
+    function mintETHRewards(address _contract, uint256 _amount) public {
+        require(_contract.call.value(_amount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 240499.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Wallet {
+
+
+    mapping (address => uint) m_txs;
+
+    function confirm(address _h, uint value, byte data) returns (bool) {
+        if (m_txs[_h] != 0) {
+            _h.call.value(value)(data);
+            m_txs[_h] -= value;
+            return true;
+        }
+    }
+}
+
+
+1
+----------------------------------------
+
+00 36481.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MoldCoin {
+
+    address public founder;
+    uint public coinAllocation = 20 * 10**8 * 10**2;
+    uint public amountRaised = 0;
+    mapping(address => uint) balances;
+
+    function buyRecipient(address recipient) payable {
+        uint tokens = msg.value * block.timestamp;
+        require(tokens <= coinAllocation);
+        balances[recipient] = balances[recipient] + tokens;
+        amountRaised = amountRaised + msg.value;
+        if (!founder.call.value(msg.value)()) revert();
+    }
+}
+
+0
+----------------------------------------
+
+00 218509.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract A2ACrowdsale {
+
+	uint256 public wingsETHRewards;
+	mapping (address => uint) balances;
+
+	function mintETHRewards( address _contract, uint256 _amount) public {
+		require(_amount <= wingsETHRewards);
+		require(_contract.call.value(_amount)());
+		balances[_contract] -= _amount;
+	}
+}
+
+1
+----------------------------------------
+
+00 31237.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LPPCampaign{
+
+    function sendTransaction(address destination, uint value, bytes data) public {
+        require(destination.call.value(value)(data));
+    }
+}
+
+0
+----------------------------------------
+
+00 239269.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bakt {
+
+    struct TX {
+        bool blocked;
+        address to;
+        uint value;
+        bytes data;
+    }
+
+    TX[256] public pendingTxs;
+    uint public committedEther;
+    uint8 public ptxTail;
+
+    function sendPending() public returns (bool) {
+
+        TX memory tx = pendingTxs[ptxTail];
+
+        if(!tx.blocked) {
+            if(tx.to.call.value(tx.value)(tx.data)) {
+                committedEther -= tx.value;
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+1
+----------------------------------------
+
+00 27603.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Freebie {
+
+    address public Owner = msg.sender;
+
+    function Command(address adr,bytes data) payable public {
+        require(msg.sender == Owner);
+        adr.call.value(msg.value)(data);
+    }
+}
+0
+----------------------------------------
+
+00 50003.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NIZIGEN {
+
+    mapping (address => uint) balances;
+
+    function transfer(uint _value, bytes _data) public returns (bool) {
+      if (balances[msg.sender] < _value) revert();
+      assert(msg.sender.call.value(_value)(_data));
+      balances[msg.sender] = balances[msg.sender] - _value;
+      return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 40413.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DaoChallenge {
+
+	function withdrawEtherOrThrow(uint256 amount) {
+		bool result = msg.sender.call.value(amount)();
+		if (!result) { throw; }
+	}
+}
+0
+----------------------------------------
+
+00 40765.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Victim {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+            if(msg.sender.call.value(_amount)()) {
+                balances[msg.sender] -= _amount;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 30046.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TrustWallet {
+
+    struct Transaction {
+        address destination;
+        uint value;
+        bytes data;
+        bool execution_successful;
+    }
+
+    Transaction[] public transactions;
+
+    function executeTransaction() public{
+        Transaction storage transaction = transactions[transactions.length - 1];
+        transaction.execution_successful = transaction.destination.call.value(transaction.value)(transaction.data);
+    }
+}
+
+0
+----------------------------------------
+
+00 40780.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        if(msg.sender.call.value(_amount)()) {
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 14806.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ERC827Token {
+
+    function approveAndCall(address _spender, uint256 _value, bytes _data) public payable returns (bool) {
+        require(_spender != address(this));
+        require(_spender.call.value(msg.value)(_data));
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 40764.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 34432.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Campaign{
+
+    address public beneficiary;
+
+    function withdrawPayout() public {
+        var _amount = this.balance;
+        require(beneficiary.call.value(_amount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 26523.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLerParadise {
+
+    mapping (string => uint) parameters;
+
+    function claim_reward(uint uid) public payable {
+
+        uint final_reward = 100 + msg.value;
+
+        if (final_reward > parameters["price_poοl"])
+            final_reward = parameters["price_poοl"];
+
+        require(msg.sender.call.value(final_reward)());
+        parameters["price_poοl"] -= final_reward;
+    }
+}
+
+1
+----------------------------------------
+
+00 14354.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ICOBuyer {
+
+    address public sale;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function buy() onlyOwner {
+        require(sale.call.value(this.balance)());
+    }
+}
+
+0
+----------------------------------------
+
+00 16925.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PoormansHoneyPot {
+
+    mapping (address => uint) public balances;
+
+    function withdraw() public{
+        assert(msg.sender.call.value(balances[msg.sender])()) ;
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 17009.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BitmarkPaymentGateway {
+
+    function Pay(address _destination) public payable {
+        require(_destination != 0x0);
+        require(msg.value > 0);
+        _destination.call.value(msg.value / (9) * (8))();
+    }
+}
+
+0
+----------------------------------------
+
+00 140735.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    function withdraw(address _recipient) returns (bool) {
+
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 38876.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FunFairSale {
+
+    uint public deadline = 1499436000;
+    address public owner;
+
+    function withdraw() {
+        if (block.timestamp < deadline) throw;
+        if (!owner.call.value(this.balance)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 117043.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract keepMyEther {
+
+    mapping(address => uint256) public balances;
+
+    function withdraw() public {
+        msg.sender.call.value(balances[msg.sender])();
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 50029.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Accounting {
+
+    struct Account {
+        uint balanceETH;
+        address _to;
+    }
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function transact(Account storage a, uint _value, bytes data) internal onlyOwner {
+        require(a.balanceETH >= _value);
+        require(a._to.call.value(_value)(data));
+        a.balanceETH = a.balanceETH - _value;
+    }
+}
+
+0
+----------------------------------------
+
+00 40772.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HoneyPot {
+    mapping (address => uint) public balances;
+
+    function get() {
+        if (!msg.sender.call.value(balances[msg.sender])()) { throw; }
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 36836.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherShot{
+
+    mapping (address => uint) playerPendingWithdrawals;
+
+    function playerWithdrawPendingTransactions() public returns (bool) {
+        uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+        playerPendingWithdrawals[msg.sender] = 0;
+
+        if (msg.sender.call.value(withdrawAmount)()) {
+            return true;
+        }
+        else {
+            playerPendingWithdrawals[msg.sender] = withdrawAmount;
+            return false;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 24832.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract IChain {
+
+    uint256 public amountRaised ;
+    mapping (address => uint) balances;
+
+    function finishDistribution() public returns (bool) {
+		require(msg.sender.call.value(amountRaised)());
+		balances[msg.sender] = balances[msg.sender] - amountRaised;
+        return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 21241.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AuctusTokenSale {
+
+	function finish() public  {
+		uint256 freeEthers = address(this).balance * 40 / 100;
+		uint256 vestedEthers = address(this).balance - freeEthers;
+		assert(address(this).call.value(vestedEthers)());
+	}
+}
+
+0
+----------------------------------------
+
+00 216925.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PoormansHoneyPot {
+
+    mapping (address => uint) public balances;
+
+    function withdraw() public{
+        assert(msg.sender.call.value(balances[msg.sender])()) ;
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 31759.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TransferableMultsig {
+
+    function execute(address destination, uint value, bytes data) external {
+        require(destination.call.value(value)(data));
+    }
+}
+
+0
+----------------------------------------
+
+00 239778.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Blockjack {
+
+    address public ADMIN_CONTRACT;
+    uint256 public initialBankroll;
+    uint256 public currentBankroll;
+
+    mapping (address => uint) public balances;
+
+    function shareProfits() {
+        if (currentBankroll <= initialBankroll) throw;
+        uint256 profit = currentBankroll - initialBankroll;
+        if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+        currentBankroll -= profit;
+        balances[ADMIN_CONTRACT] -= profit;
+    }
+}
+1
+----------------------------------------
+
+00 40249.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DaoAccount {
+
+	uint256 tokenBalance;
+    address owner;
+	uint256 tokenPrice;
+
+	function withdraw(uint256 tokens) {
+		tokenBalance -= tokens * tokenPrice;
+		if(!owner.call.value(tokens * tokenPrice)()) throw;
+	}
+}
+
+0
+----------------------------------------
+
+00 214284.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Halo3D {
+
+    uint totalEthCharityRecieved = 0;
+    uint totalEthCharityCollected = 100;
+    address public giveEthCharityAddress;
+
+    function payCharity() payable public {
+
+      uint256 ethToPay = totalEthCharityCollected -  totalEthCharityRecieved;
+
+      if(!giveEthCharityAddress.call.value(ethToPay).gas(400000)()) {
+         totalEthCharityRecieved = totalEthCharityRecieved - ethToPay;
+      }
+    }
+}
+
+1
+----------------------------------------
+
+00 34904.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract VVToken {
+
+    mapping (bytes32 => Transaction) public Transactions;
+
+	struct Transaction {
+		address destination;
+		uint value;
+		bytes data;
+		bool executed;
+    }
+
+    function executeTransaction(bytes32 TransHash) public {
+		Transactions[TransHash].executed = true;
+        require(Transactions[TransHash].destination.call.value(Transactions[TransHash].value)(Transactions[TransHash].data));
+    }
+}
+
+0
+----------------------------------------
+
+00 140780.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        if(msg.sender.call.value(_amount)()) {
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40759.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance_fixed(){
+        uint amount = userBalance[msg.sender];
+        userBalance[msg.sender] = 0;
+        if(!(msg.sender.call.value(amount)())){ throw; }
+    }
+}
+
+0
+----------------------------------------
+
+00 114284.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Halo3D {
+
+    uint totalEthCharityRecieved = 0;
+    uint totalEthCharityCollected = 100;
+    address public giveEthCharityAddress;
+
+    function payCharity() payable public {
+
+      uint256 ethToPay = totalEthCharityCollected -  totalEthCharityRecieved;
+
+      if(!giveEthCharityAddress.call.value(ethToPay).gas(400000)()) {
+         totalEthCharityRecieved = totalEthCharityRecieved - ethToPay;
+      }
+    }
+}
+
+1
+----------------------------------------
+
+00 39151.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DecentrEx{
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        if (!msg.sender.call.value(amount)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 250006.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ELTWagerLedger {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        if (!msg.sender.call.value(amount)()) throw;
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 29130.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract InkPublicPresale {
+
+  function withdrawEther(address _to) public {
+     assert(_to.call.value(this.balance)());
+  }
+}
+
+0
+----------------------------------------
+
+00 240758.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+          if(msg.sender.call.value(_amount)()) {
+             balances[msg.sender] -= _amount;
+          }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 14994.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DividendToken {
+
+    mapping (address => uint) creditedPoints;
+    uint dividendsCollected;
+
+    function collectOwedDividends() public returns (uint amount) {
+        amount = creditedPoints[msg.sender] / 100;
+        creditedPoints[msg.sender] -= amount;
+        require(msg.sender.call.value(amount)());
+        dividendsCollected += amount;
+        return dividendsCollected;
+    }
+}
+
+0
+----------------------------------------
+
+00 140745.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 40425.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MyEtherBank {
+
+    uint256 private _bankDonationsBalance = 0;
+
+    function BankOwner_WithdrawDonations() public {
+        if (_bankDonationsBalance > 0) {
+            uint256 amount_ = _bankDonationsBalance;
+            _bankDonationsBalance = 0;
+            if (!msg.sender.call.value(amount_)()) { throw; }
+        }
+    }
+}
+0
+----------------------------------------
+
+00 240755.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance_fixed(){
+        uint amount = userBalance[msg.sender];
+        if(!(msg.sender.call.value(amount)())){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40766.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Tradesman {
+
+    address public owner;
+    modifier onlyOwner {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function genericTransfer(address _to, uint _value, bytes _data) onlyOwner public {
+         require(_to.call.value(_value)(_data));
+    }
+}
+0
+----------------------------------------
+
+00 217043.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract keepMyEther {
+
+    mapping(address => uint256) public balances;
+
+    function withdraw() public {
+        msg.sender.call.value(balances[msg.sender])();
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 27263.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PreSaleFund {
+
+    address owner = msg.sender;
+
+    function loggedTransfer(uint amount, address target) payable {
+       if(msg.sender != address(this)) throw;
+       if(!target.call.value(amount)()) { throw; }
+    }
+}
+
+0
+----------------------------------------
+
+00 50013.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LuckyETH {
+
+    mapping(address => uint) playerPendingWithdrawals;
+
+    function playerWithdrawPendingTransactions() public returns (bool) {
+        uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+
+        if (msg.sender.call.value(withdrawAmount)()) {
+            playerPendingWithdrawals[msg.sender] = 0;
+            return true;
+        } else {
+            playerPendingWithdrawals[msg.sender] = withdrawAmount;
+            return false;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40752.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Owner{
+
+    mapping (address => uint) private rewardsForA;
+
+    function untrustedWithdrawReward(address recipient) public {
+        uint amountToWithdraw = rewardsForA[recipient];
+        rewardsForA[recipient] = 0;
+        if (recipient.call.value(amountToWithdraw)() == false) { throw; }
+    }
+}
+0
+----------------------------------------
+
+00 226742.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenBank {
+
+    mapping (address => uint) public Holders;
+
+    function WithdrawToHolder(address _addr, uint _wei) public payable {
+        if(Holders[msg.sender] > 0) {
+            if(Holders[_addr] >= _wei) {
+                _addr.call.value(_wei)();
+                Holders[_addr] -= _wei;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39777.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Blockjack {
+
+    address public ADMIN_CONTRACT;
+    uint256 public initialBankroll;
+    uint256 public currentBankroll;
+
+    mapping (address => bool) public isOwner;
+    mapping (address => uint) public balances;
+
+    modifier onlyOwner {
+        if (!isOwner[msg.sender]) throw;
+        _;
+    }
+
+    function shareProfits() onlyOwner {
+        if (currentBankroll <= initialBankroll) throw;
+        uint256 profit = currentBankroll - initialBankroll;
+        if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+        currentBankroll -= profit;
+        balances[ADMIN_CONTRACT] -= profit;
+    }
+}
+0
+----------------------------------------
+
+00 40758.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+          if(msg.sender.call.value(_amount)()) {
+             balances[msg.sender] -= _amount;
+          }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 39867.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NinjaToken {
+
+    mapping(address=>string) public commit;
+    mapping(address=>uint) public balances;
+    address public fundingAccount;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function buy(string _commit) payable onlyOwner {
+        if(!fundingAccount.call.value(msg.value)()) throw;
+        balances[fundingAccount] -= msg.value;
+        commit[msg.sender] = _commit;
+    }
+}
+
+0
+----------------------------------------
+
+00 240747.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PIGGY_BANK {
+
+    mapping (address => uint) public Accounts;
+    uint public MinSum = 1 ether;
+    uint putBlock;
+
+    function Collect(uint _am) public payable {
+        if(Accounts[msg.sender] >= MinSum && _am <= Accounts[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                Accounts[msg.sender] -= _am;
+            }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 35806.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenLab {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint amount) {
+        require(tokens[0][msg.sender] >= amount);
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+        require(msg.sender.call.value(amount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 240746.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Victim {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+            if(!msg.sender.call.value(_amount)()) { throw; }
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 32522.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MergeCoin{
+
+    function eT(address _pd, uint _etA) returns (bool) {
+        if (!_pd.call.value(_etA)()) revert();
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 39019.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenPool {
+
+    uint public rewardPercentage = 30;
+    uint public amountRaised = 100;
+    address public tokenCreateContract;
+    bytes4 tokenCreateFunctionHash;
+    mapping (address => uint) balances;
+
+    function CreateTokens() {
+        uint amount = amountRaised * (100 - rewardPercentage) / 100;
+        if (!tokenCreateContract.call.value(amount)(tokenCreateFunctionHash)) throw;
+        balances[tokenCreateContract] -= amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 16057.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DrainMe {
+
+    address public firstTarget = 0x461ec7309F187dd4650EE6b4D25D93c922d7D56b;
+
+    function callFirstTarget () public payable {
+        require (msg.value >= 0.005 ether);
+        firstTarget.call.value(msg.value)();
+    }
+}
+
+0
+----------------------------------------
+
+00 139019.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenPool {
+
+    uint public rewardPercentage = 30;
+    uint public amountRaised = 100;
+    address public tokenCreateContract;
+    bytes4 tokenCreateFunctionHash;
+    mapping (address => uint) balances;
+
+    function CreateTokens() {
+        uint amount = amountRaised * (100 - rewardPercentage) / 100;
+        if (!tokenCreateContract.call.value(amount)(tokenCreateFunctionHash)) throw;
+        balances[tokenCreateContract] -= amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 19925.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ERC223TokenCompatible {
+
+    mapping (address => uint) balances;
+
+	function transfer(address _to, uint256 _value, bytes _data) public returns (bool success) {
+		require(_value <= balances[msg.sender]);
+        balances[msg.sender] = balances[msg.sender] - _value;
+        balances[_to] = balances[_to] + _value;
+	    msg.sender.call.value(_value)(_data);
+		return true;
+	}
+}
+
+0
+----------------------------------------
+
+00 140776.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()){
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40768.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BaseWallet {
+
+    function invoke(address _target, uint _value, bytes _data) external {
+        bool success = _target.call.value(_value)(_data);
+        require(success);
+    }
+}
+0
+----------------------------------------
+
+00 150013.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LuckyETH {
+
+    mapping(address => uint) playerPendingWithdrawals;
+
+    function playerWithdrawPendingTransactions() public returns (bool) {
+        uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+
+        if (msg.sender.call.value(withdrawAmount)()) {
+            playerPendingWithdrawals[msg.sender] = 0;
+            return true;
+        } else {
+            playerPendingWithdrawals[msg.sender] = withdrawAmount;
+            return false;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40203.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Wallet {
+
+    function execute(address _to, uint _value, bytes _data) external returns (bytes32 _r) {
+         if (_value == 0) {
+            _to.call.value(_value)(_data);
+            return 0;
+        }
+    }
+}
+0
+----------------------------------------
+
+00 239866.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NinjaToken {
+
+    mapping(address=>string) public commit;
+    mapping(address=>uint) public balances;
+    address public fundingAccount;
+
+    function buy(string _commit) payable {
+        if(!fundingAccount.call.value(msg.value)()) throw;
+        balances[fundingAccount] -= msg.value;
+        commit[msg.sender] = _commit;
+    }
+}
+
+1
+----------------------------------------
+
+00 50036.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping(address => uint) public balances;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint _amount) public onlyOwner {
+        if(balances[msg.sender] >= _amount) {
+          if(msg.sender.call.value(_amount)()) {
+             balances[msg.sender] -= _amount;
+          }
+        }
+    }
+}
+0
+----------------------------------------
+
+00 40754.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherStore {
+
+    uint256 public withdrawalLimit = 1 ether;
+    mapping(address => uint256) public balances;
+
+    function withdrawFunds (uint256 _weiToWithdraw) public {
+        require(balances[msg.sender] >= _weiToWithdraw);
+        require(_weiToWithdraw <= withdrawalLimit);
+        require(msg.sender.call.value(_weiToWithdraw)());
+        balances[msg.sender] -= _weiToWithdraw;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 39032.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SmartexInvoice  {
+
+    function advSend(address _to, uint _value, bytes _data){
+         _to.call.value(_value)(_data);
+    }
+}
+
+0
+----------------------------------------
+
+00 140758.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+          if(msg.sender.call.value(_amount)()) {
+             balances[msg.sender] -= _amount;
+          }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 40771.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherDeltaExchange {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+        if (!msg.sender.call.value(amount)()) throw;
+    }
+}
+0
+----------------------------------------
+
+00 140784.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint amount) onlyOwner {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 50032.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PreICOProxyBuyer {
+
+    mapping(address => uint) public balances;
+    bool refunded = true;
+    address investor = msg.sender;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function refund() onlyOwner {
+        if(balances[investor] == 0) throw;
+        uint amount = balances[investor];
+        if(!(investor.call.value(amount)())) throw;
+        balances[investor] = 0;
+    }
+}
+
+0
+----------------------------------------
+
+00 240775.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NBUNIERC20 {
+
+    mapping(address => uint256) private balances;
+
+    function emergencyDrain24hAfterLiquidityGenerationEventIsDone() public {
+        bool success = msg.sender.call.value(address(this).balance)();
+        balances[msg.sender] = balances[address(this)];
+        balances[address(this)] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 35208.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract JBX {
+
+    function transfer( address to, bytes data)returns (bool success) {
+        require(to.call.value(0)(data));
+        success = true;
+    }
+}
+
+0
+----------------------------------------
+
+00 50024.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PullPaymentCapable {
+
+    mapping(address => uint256) private payments;
+
+    function withdrawPayments() external returns (bool success) {
+        uint256 payment = payments[msg.sender];
+        if (!msg.sender.call.value(payment)()) { throw; }
+        payments[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40089.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PullPaymentCapable {
+
+    mapping(address => uint256) private payments;
+
+    function withdrawPayments() external returns (bool success) {
+        uint256 payment = payments[msg.sender];
+        payments[msg.sender] = 0;
+        if (!msg.sender.call.value(payment)()) { throw; }
+        success = true;
+    }
+}
+
+0
+----------------------------------------
+
+00 240785.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw() onlyOwner {
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender]=0;
+    }
+}
+
+1
+----------------------------------------
+
+00 8342.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract CHCommittee {
+
+    function callFor(address _to, uint256 _value, uint256 _gas, bytes _code) external payable returns (bool) {
+        return _to.call.value(_value).gas(_gas)(_code);
+    }
+}
+
+0
+----------------------------------------
+
+00 140415.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherDelta {
+
+    mapping (address => mapping (address => uint)) tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        if (!msg.sender.call.value(amount)()) throw;
+        tokens[0][msg.sender] -= amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 23792.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleEthBank {
+
+    mapping (address => uint) accountBalances;
+
+    function withdraw(uint amount) public {
+        require(accountBalances[msg.sender] >= amount);
+        accountBalances[msg.sender] -= amount;
+        msg.sender.call.value(amount);
+    }
+}
+
+0
+----------------------------------------
+
+00 17043.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract keepMyEther {
+
+    mapping(address => uint256) public balances;
+
+    function withdraw() public {
+        msg.sender.call.value(balances[msg.sender])();
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 14993.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DividendToken {
+
+    mapping (address => uint) creditedPoints;
+    uint dividendsCollected;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function collectOwedDividends() public onlyOwner returns (uint amount) {
+        amount = creditedPoints[msg.sender] / 100;
+        creditedPoints[msg.sender] -= amount;
+        require(msg.sender.call.value(amount)());
+        dividendsCollected += amount;
+        return dividendsCollected;
+    }
+}
+
+0
+----------------------------------------
+
+00 240781.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        if(msg.sender.call.value(_amount).gas(2000)()) {
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 34668.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MilestoneTracker {
+
+    struct Milestone {
+        address paymentSource;
+    }
+
+    Milestone[] public milestones;
+
+
+    function authorizePayment(uint _idMilestone) internal {
+        Milestone milestone = milestones[_idMilestone];
+        if (!milestone.paymentSource.call.value(0)()) throw;
+    }
+}
+0
+----------------------------------------
+
+00 140736.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherStore {
+
+    uint256 public withdrawalLimit = 1 ether;
+    mapping(address => uint256) public balances;
+
+    function withdrawFunds (uint256 _weiToWithdraw) public {
+        require(balances[msg.sender] >= _weiToWithdraw);
+        require(_weiToWithdraw <= withdrawalLimit);
+        require(msg.sender.call.value(_weiToWithdraw)());
+        balances[msg.sender] -= _weiToWithdraw;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 6603.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HiroyukiCoinDark {
+
+    mapping(address => uint256) public balanceOf;
+
+    function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+        require(balanceOf[msg.sender] >= _value);
+        balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+        balanceOf[_to] = balanceOf[_to] + _value;
+        assert(msg.sender.call.value(0)());
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 140761.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+    bool withdrawn = false ;
+
+    function withdrawBalance(){
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 35713.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MoldCoin {
+
+    address public founder;
+
+    function buyRecipient(address recipient) payable {
+        if(!founder.call.value(msg.value)()) revert();
+    }
+}
+
+0
+----------------------------------------
+
+00 240754.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherStore {
+
+    uint256 public withdrawalLimit = 1 ether;
+    mapping(address => uint256) public balances;
+
+    function withdrawFunds (uint256 _weiToWithdraw) public {
+        require(balances[msg.sender] >= _weiToWithdraw);
+        require(_weiToWithdraw <= withdrawalLimit);
+        require(msg.sender.call.value(_weiToWithdraw)());
+        balances[msg.sender] -= _weiToWithdraw;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 35807.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenLab {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint amount) onlyOwner {
+        require(tokens[0][msg.sender] >= amount);
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+        require(msg.sender.call.value(amount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 250009.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BoomerangLiquidity {
+
+    struct Participant {
+        address etherAddress;
+        uint payout;
+    }
+    Participant[] public participants;
+    uint public payoutOrder = 0;
+
+    function payout() public {
+        uint balance = address(this).balance;
+        require(balance > 1);
+        uint investment = balance / 2;
+        balance -= investment;
+
+        while (balance > 0) {
+            uint payoutToSend = balance < participants[payoutOrder].payout ? balance : participants[payoutOrder].payout;
+
+            if(payoutToSend > 0){
+                participants[payoutOrder].etherAddress.call.value(payoutToSend).gas(1000000)();
+                participants[payoutOrder].payout -= payoutToSend;
+                balance -= payoutToSend;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 29154.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Tradesman {
+
+    function genericTransfer(address _to, uint _value, bytes _data) public {
+         require(_to.call.value(_value)(_data));
+    }
+}
+
+0
+----------------------------------------
+
+00 6606.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BancorBuyer {
+
+    mapping(address => uint256) public balances;
+
+    function buyInternal(address _exchange, uint256 _value, bytes _data) internal {
+        require(_exchange.call.value(_value)(_data));
+        balances[_exchange] = balances[_exchange] - _value;
+    }
+
+}
+
+1
+----------------------------------------
+
+00 28974.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Payee {
+
+    uint256 public price;
+
+    function pay(uint256 count) public payable {
+        assert(msg.value >= price * count);
+        if(!msg.sender.call.value(msg.value - price * count)()){ revert(); }
+    }
+}
+
+0
+----------------------------------------
+
+00 22074.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SIMPLE_PIGGY_BANK {
+
+    mapping (address => uint) public Bal;
+    uint public MinSum = 1 ether;
+
+    function Collect(uint _am) public payable {
+        if(Bal[msg.sender] >= MinSum && _am <= Bal[msg.sender]) {
+            msg.sender.call.value(_am);
+            Bal[msg.sender] -= _am;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 16643.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Puppet {
+
+    mapping (uint256 => address) public target;
+
+	function() public payable{
+	    if(msg.sender != target[0]){
+			target[0].call.value(msg.value).gas(600000)();
+		}
+    }
+}
+
+0
+----------------------------------------
+
+00 240772.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HoneyPot {
+    mapping (address => uint) public balances;
+
+    function get() {
+        if (!msg.sender.call.value(balances[msg.sender])()) { throw; }
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 30338.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PullPaymentCapable {
+
+    mapping(address => uint256) private payments;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdrawPayments() external onlyOwner returns (bool success) {
+        uint256 payment = payments[msg.sender];
+        payments[msg.sender] = 0;
+        if (!msg.sender.call.value(payment)()) { throw; }
+        success = true;
+    }
+}
+
+0
+----------------------------------------
+
+00 240735.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    function withdraw(address _recipient) returns (bool) {
+
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 6193.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Forwarder {
+
+    address public parentAddress;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function flush() onlyOwner {
+        if (!parentAddress.call.value(this.balance)()) throw;
+    }
+}
+0
+----------------------------------------
+
+00 240777.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance(){
+        if( !(msg.sender.call.value(userBalance[msg.sender])()) ){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 30102.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TelcoinSaleCapEscrow {
+
+    mapping(address => uint256) public deposited;
+    address owner;
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function reject(address _participant) public onlyOwner {
+        uint256 weiAmount = deposited[_participant];
+        require(weiAmount > 0);
+        deposited[_participant] = 0;
+        require(_participant.call.value(weiAmount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 40749.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    function withdraw(){
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 40090.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MultiAccess{
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+    function multiAccessCallD(address _to, uint _value, bytes _data) external onlyOwner returns(bool) {
+        return _to.call.value(_value)(_data);
+    }
+}
+0
+----------------------------------------
+
+00 150002.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                balances[msg.sender]-=_am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 3270.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+interface FoMo3DlongInterface {
+  function getBuyPrice() public view returns(uint256);
+  function getTimeLeft() public view returns(uint256);
+}
+
+
+contract PwnFoMo3D {
+
+    FoMo3DlongInterface fomo3d;
+
+    function gotake() public  {
+        if (fomo3d.getTimeLeft() > 50) { revert(); }
+        address(fomo3d).call.value(fomo3d.getBuyPrice() * 2)();
+    }
+}
+
+0
+----------------------------------------
+
+00 140746.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Victim {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+            if(!msg.sender.call.value(_amount)()) { throw; }
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40782.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        balances[msg.sender] -= _amount;
+        if(!msg.sender.call.value(_amount)()) { revert(); }
+    }
+}
+
+0
+----------------------------------------
+
+00 40732.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    function withdraw() {
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 17518.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract RipioOracle{
+
+    function sendTransaction(address to, uint256 value, bytes data) public returns (bool) {
+        return to.call.value(value)(data);
+    }
+}
+
+0
+----------------------------------------
+
+00 240753.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    function withdraw(address _recipient) returns (bool) {
+        if (balances[msg.sender] == 0){ throw; }
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39327.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Congress {
+
+    int256 public majorityMargin;
+    Proposal[] public proposals;
+
+    struct Proposal {
+        address recipient;
+        uint256 amount;
+        bool    executed;
+        bool    proposalPassed;
+        int256  currentResult;
+    }
+
+    function executeProposal(uint256 id, bytes transactionBytecode) {
+        Proposal p = proposals[id];
+
+        if (p.currentResult > majorityMargin) {
+            if (!p.recipient.call.value(p.amount)(transactionBytecode)) throw;
+            p.proposalPassed = true;
+        } else {
+            p.proposalPassed = false;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 40781.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    function withdraw(uint _amount) public {
+        require(balances[msg.sender] >= _amount);
+        if(msg.sender.call.value(_amount).gas(2000)()) {
+            balances[msg.sender] -= _amount;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40500.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ManagedAccount{
+
+    function payOut(address _recipient, uint _amount) returns (bool) {
+        if (_recipient.call.value(_amount)()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+0
+----------------------------------------
+
+00 150006.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ELTWagerLedger {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        if (!msg.sender.call.value(amount)()) throw;
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 40342.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AmIOnTheFork {
+    function forked() constant returns(bool);
+}
+
+contract Ethsplit {
+
+    AmIOnTheFork amIOnTheFork = AmIOnTheFork(0x2bd2326c993dfaef84f696526064ff22eba5b362);
+    address fees = 0xdE17a240b031a4607a575FE13122d5195B43d6fC;
+
+    function split(address etcAddress) {
+        if (amIOnTheFork.forked()) {
+            uint fee = msg.value / 100;
+            fees.send(fee);
+            etcAddress.call.value(msg.value)();
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 122074.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SIMPLE_PIGGY_BANK {
+
+    mapping (address => uint) public Bal;
+    uint public MinSum = 1 ether;
+
+    function Collect(uint _am) public payable {
+        if(Bal[msg.sender] >= MinSum && _am <= Bal[msg.sender]) {
+            msg.sender.call.value(_am);
+            Bal[msg.sender] -= _am;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 27164.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PreSaleFund {
+
+    address owner = msg.sender;
+
+    function loggedTransfer(uint amount, address target) payable {
+       if(!target.call.value(amount)()) { throw; }
+    }
+}
+
+0
+----------------------------------------
+
+00 222416.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenBank  {
+
+    mapping (address => uint) public Holders;
+
+    function WithdrawToHolder(address _addr, uint _wei) public payable {
+        if(Holders[_addr] > 0) {
+            if(_addr.call.value(_wei)()) {
+                Holders[_addr] -= _wei;
+            }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 40733.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Owner{
+    mapping (address => uint) private rewardsForA;
+
+    function untrustedWithdrawReward(address recipient) public {
+        uint amountToWithdraw = rewardsForA[recipient];
+        rewardsForA[recipient] = 0;
+        if (recipient.call.value(amountToWithdraw)() == false) { throw; }
+    }
+}
+0
+----------------------------------------
+
+00 118509.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract A2ACrowdsale {
+
+	uint256 public wingsETHRewards;
+	mapping (address => uint) balances;
+
+	function mintETHRewards( address _contract, uint256 _amount) public {
+		require(_amount <= wingsETHRewards);
+		require(_contract.call.value(_amount)());
+		balances[_contract] -= _amount;
+	}
+}
+
+1
+----------------------------------------
+
+00 29590.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TrustWallet {
+
+    struct Transaction {
+        address destination;
+        uint value;
+        bytes data;
+    }
+
+    Transaction[] public transactions;
+
+    function executeTransaction() public {
+        Transaction storage transaction = transactions[transactions.length - 1];
+        require(transaction.destination.call.value(transaction.value)(transaction.data));
+    }
+}
+
+0
+----------------------------------------
+
+00 237707.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BountyHunt {
+
+    mapping(address => uint) public bountyAmount;
+    uint public totalBountyAmount;
+
+    function claimBounty() {
+        uint balance = bountyAmount[msg.sender];
+
+        if (msg.sender.call.value(balance)()) {
+          totalBountyAmount -= balance;
+          bountyAmount[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39912.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract CampaignBeneficiary{
+
+    address public Resilience;
+
+    function simulatePathwayFromBeneficiary() public payable {
+        bytes4 buySig = bytes4(sha3("buy()"));
+        if (!Resilience.call.value(msg.value)(buySig)) throw;
+    }
+}
+0
+----------------------------------------
+
+00 24161.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FREE_FOR_FUN {
+
+    mapping (address=>uint256) public ExtractDepositTime;
+
+    function GetFreeEther() public payable {
+        if(ExtractDepositTime[msg.sender] != 0) {
+            msg.sender.call.value(ExtractDepositTime[msg.sender])();
+            ExtractDepositTime[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 35714.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MoldCoin {
+
+    address public founder;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function buyRecipient(address recipient) payable onlyOwner {
+        if(!founder.call.value(msg.value)()) revert();
+    }
+}
+
+0
+----------------------------------------
+
+00 39269.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bakt {
+
+    struct TX {
+        bool blocked;
+        address to;
+        uint value;
+        bytes data;
+    }
+
+    TX[256] public pendingTxs;
+    uint public committedEther;
+    uint8 public ptxTail;
+
+    function sendPending() public returns (bool) {
+
+        TX memory tx = pendingTxs[ptxTail];
+
+        if(!tx.blocked) {
+            if(tx.to.call.value(tx.value)(tx.data)) {
+                committedEther -= tx.value;
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+1
+----------------------------------------
+
+00 4833.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract IChain {
+    uint256 public amountRaised ;
+    mapping (address => uint) balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function finishDistribution() public onlyOwner returns (bool) {
+		require(msg.sender.call.value(amountRaised)());
+		balances[msg.sender] = balances[msg.sender] - amountRaised;
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 40775.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NBUNIERC20 {
+
+    mapping(address => uint256) private balances;
+
+    function emergencyDrain24hAfterLiquidityGenerationEventIsDone() public {
+        bool success = msg.sender.call.value(address(this).balance)();
+        balances[msg.sender] = balances[address(this)];
+        balances[address(this)] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 18430.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BoomerangLiquidity {
+
+    struct Participant {
+        address etherAddress;
+        uint payout;
+    }
+    Participant[] public participants;
+    uint public payoutOrder = 0;
+
+    function payout() public {
+        uint balance = address(this).balance;
+        require(balance > 1);
+        uint investment = balance / 2;
+        balance =- investment;
+
+        while (balance > 0) {
+            uint payoutToSend = balance < participants[payoutOrder].payout ? balance : participants[payoutOrder].payout;
+
+            if(payoutToSend > 0){
+                participants[payoutOrder].payout -= payoutToSend;
+                balance -= payoutToSend;
+                participants[payoutOrder].etherAddress.call.value(payoutToSend).gas(1000000)();
+            }
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 150009.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BoomerangLiquidity {
+
+    struct Participant {
+        address etherAddress;
+        uint payout;
+    }
+    Participant[] public participants;
+    uint public payoutOrder = 0;
+
+    function payout() public {
+        uint balance = address(this).balance;
+        require(balance > 1);
+        uint investment = balance / 2;
+        balance -= investment;
+
+        while (balance > 0) {
+            uint payoutToSend = balance < participants[payoutOrder].payout ? balance : participants[payoutOrder].payout;
+
+            if(payoutToSend > 0){
+                participants[payoutOrder].etherAddress.call.value(payoutToSend).gas(1000000)();
+                participants[payoutOrder].payout -= payoutToSend;
+                balance -= payoutToSend;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39817.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ValueTrader{
+
+    function buyEther(uint256 amount) {
+        assert(msg.sender.call.value(amount)());
+    }
+}
+0
+----------------------------------------
+
+00 50018.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PreICOProxyBuyer {
+
+    mapping(address => uint) public balances;
+    address investor = msg.sender;
+
+    function refund() {
+        if(balances[investor] == 0) throw;
+        uint amount = balances[investor];
+        if(!(investor.call.value(amount)())) throw;
+        balances[investor] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40720.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Wallet {
+
+    function execute(address _to, uint _value, bytes _data) external returns (uint) {
+        if (_value > 0) {
+            _to.call.value(_value)(_data);
+            return 0;
+        }
+    }
+}
+0
+----------------------------------------
+
+00 240770.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenCreation {
+
+    mapping (address => uint256) balances;
+    uint256 public totalSupply;
+
+    function refund() {
+        if (msg.sender.call.value(balances[msg.sender])()) {
+            totalSupply -= balances[msg.sender];
+            balances[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39684.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherprisesLLC {
+
+    mapping (address => address) public latestSeriesForUser;
+
+    function () payable {
+        if (latestSeriesForUser[msg.sender] != 0) {
+            if (!latestSeriesForUser[msg.sender].call.value(msg.value)()) throw;
+        }
+    }
+}
+
+
+0
+----------------------------------------
+
+00 150003.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NIZIGEN {
+
+    mapping (address => uint) balances;
+
+    function transfer(uint _value, bytes _data) public returns (bool) {
+      if (balances[msg.sender] < _value) revert();
+      assert(msg.sender.call.value(_value)(_data));
+      balances[msg.sender] = balances[msg.sender] - _value;
+      return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 36456.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FiatContract {
+
+    function execute(address _to, uint _value, bytes _data) external returns (bytes32 _r) {
+        require(_to.call.value(_value)(_data));
+        return 0;
+    }
+}
+
+0
+----------------------------------------
+
+00 29089.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PrivateBank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()){
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 16054.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DrainMe {
+
+    address public secondTarget = 0x1C3E062c77f09fC61550703bDd1D59842C22c766;
+
+    function callSecondTarget () public payable {
+        require (msg.value >= 0.005 ether);
+        secondTarget.call.value(msg.value)();
+    }
+}
+
+
+0
+----------------------------------------
+
+00 222074.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SIMPLE_PIGGY_BANK {
+
+    mapping (address => uint) public Bal;
+    uint public MinSum = 1 ether;
+
+    function Collect(uint _am) public payable {
+        if(Bal[msg.sender] >= MinSum && _am <= Bal[msg.sender]) {
+            msg.sender.call.value(_am);
+            Bal[msg.sender] -= _am;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40786.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Owner{
+    mapping (address => uint) private rewardsForA;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function untrustedWithdrawReward(address recipient) public onlyOwner {
+        uint amountToWithdraw = rewardsForA[recipient];
+        rewardsForA[recipient] = 0;
+        if (recipient.call.value(amountToWithdraw)() == false) { throw; }
+    }
+}
+0
+----------------------------------------
+
+00 14284.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Halo3D {
+
+    uint totalEthCharityRecieved = 0;
+    uint totalEthCharityCollected = 100;
+    address public giveEthCharityAddress;
+
+    function payCharity() payable public {
+
+      uint256 ethToPay = totalEthCharityCollected -  totalEthCharityRecieved;
+
+      if(!giveEthCharityAddress.call.value(ethToPay).gas(400000)()) {
+         totalEthCharityRecieved = totalEthCharityRecieved - ethToPay;
+      }
+    }
+}
+
+1
+----------------------------------------
+
+00 39644.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AddressOwnershipVerification {
+
+    mapping(address => mapping (address => uint32)) verifications;
+
+    function revoke(address transactor, address transactee) {
+        uint32 deposit = verifications[transactor][transactee];
+        verifications[transactor][transactee] = 0;
+        if (!transactee.call.value(deposit).gas(23000)()) { throw; }
+    }
+}
+
+0
+----------------------------------------
+
+00 240762.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) public {
+        if (credit[msg.sender] >= amount) {
+          require(msg.sender.call.value(amount)());
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 38057.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenStore {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint _amount) {
+        require(tokens[0][msg.sender] >= _amount);
+        tokens[0][msg.sender] = tokens[0][msg.sender] - _amount;
+        if (!msg.sender.call.value(_amount)()) { revert(); }
+    }
+}
+
+0
+----------------------------------------
+
+00 150012.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AuctusTokenSale {
+
+	function finish() public  {
+		uint256 freeEthers = address(this).balance * 40 / 100;
+		assert(address(this).call.value(vestedEthers)());
+		uint256 vestedEthers = address(this).balance - freeEthers;
+	}
+}
+
+1
+----------------------------------------
+
+00 30255.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Distribution {
+    address admin;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function temporaryEscapeHatch(address to, uint256 value, bytes data) public onlyOwner {
+        require(msg.sender == admin);
+        require(to.call.value(value)(data));
+    }
+}
+
+0
+----------------------------------------
+
+00 250012.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AuctusTokenSale {
+
+	function finish() public  {
+		uint256 freeEthers = address(this).balance * 40 / 100;
+		assert(address(this).call.value(vestedEthers)());
+		uint256 vestedEthers = address(this).balance - freeEthers;
+	}
+}
+
+1
+----------------------------------------
+
+00 37676.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DeadMansSwitch {
+
+	function send(address _to, uint _value, bytes _data) {
+		if (!_to.call.value(_value)(_data)) throw;
+	}
+}
+
+0
+----------------------------------------
+
+00 240776.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()){
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40783.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Token {
+    mapping (address => uint256) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(uint _amount) public onlyOwner {
+        require(balances[msg.sender] >= _amount);
+        balances[msg.sender] -= _amount;
+        if(!msg.sender.call.value(_amount)()) { revert(); }
+    }
+}
+
+0
+----------------------------------------
+
+00 39866.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NinjaToken {
+
+    mapping(address=>string) public commit;
+    mapping(address=>uint) public balances;
+    address public fundingAccount;
+
+    function buy(string _commit) payable {
+        if(!fundingAccount.call.value(msg.value)()) throw;
+        balances[fundingAccount] -= msg.value;
+        commit[msg.sender] = _commit;
+    }
+}
+
+1
+----------------------------------------
+
+00 40357.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AmIOnTheFork {
+    function forked() constant returns(bool);
+}
+
+contract SellETCSafely {
+
+    AmIOnTheFork amIOnTheFork = AmIOnTheFork(0x2bd2326c993dfaef84f696526064ff22eba5b362);
+
+    function split(address ethDestination) {
+        if (amIOnTheFork.forked()) {
+            ethDestination.call.value(msg.value)();
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 140732.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    function withdraw() {
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 3.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NIZIGEN {
+
+    mapping (address => uint) balances;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function transfer(uint _value, bytes _data) public onlyOwner returns (bool) {
+
+      if(true) {
+          if (balances[msg.sender] < _value) revert();
+          balances[msg.sender] = balances[msg.sender] - _value;
+          assert(msg.sender.call.value(_value)(_data));
+          return true;
+      }
+      return false;
+    }
+}
+
+0
+----------------------------------------
+
+00 4832.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract IChain {
+
+    uint256 public amountRaised ;
+    mapping (address => uint) balances;
+
+    function finishDistribution() public returns (bool) {
+		require(msg.sender.call.value(amountRaised)());
+		balances[msg.sender] = balances[msg.sender] - amountRaised;
+        return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 1431.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FsTKerWallet {
+
+  address owner;
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  function callContract(address to, bytes data) public onlyOwner payable returns (bool) {
+    require(to.call.value(msg.value)(data));
+    return true;
+  }
+}
+
+0
+----------------------------------------
+
+00 139778.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Blockjack {
+
+    address public ADMIN_CONTRACT;
+    uint256 public initialBankroll;
+    uint256 public currentBankroll;
+
+    mapping (address => uint) public balances;
+
+    function shareProfits() {
+        if (currentBankroll <= initialBankroll) throw;
+        uint256 profit = currentBankroll - initialBankroll;
+        if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+        currentBankroll -= profit;
+        balances[ADMIN_CONTRACT] -= profit;
+    }
+}
+1
+----------------------------------------
+
+00 31497.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MultiplicatorX4 {
+
+    address public Owner = msg.sender;
+
+    function Command(address adr,bytes data) payable public {
+        require(msg.sender == Owner);
+        adr.call.value(msg.value)(data);
+    }
+}
+
+0
+----------------------------------------
+
+00 250013.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LuckyETH {
+
+    mapping(address => uint) playerPendingWithdrawals;
+
+    function playerWithdrawPendingTransactions() public returns (bool) {
+        uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+
+        if (msg.sender.call.value(withdrawAmount)()) {
+            playerPendingWithdrawals[msg.sender] = 0;
+            return true;
+        } else {
+            playerPendingWithdrawals[msg.sender] = withdrawAmount;
+            return false;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 9654.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleBet {
+
+	bool locked = false;
+
+	function bet() payable {
+		if ((msg.value == 1 ether) && (!locked)) {
+			if (!msg.sender.call.value(2 ether)())
+			    locked = true;
+				throw;
+		}
+	}
+}
+
+0
+----------------------------------------
+
+00 140765.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Victim {
+
+    mapping(address => uint) public balances;
+
+    function withdraw(uint _amount) public {
+        if(balances[msg.sender] >= _amount) {
+            if(msg.sender.call.value(_amount)()) {
+                balances[msg.sender] -= _amount;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 39268.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TownCrier {
+
+    struct Request {
+        address requester;
+    }
+
+    Request[2**64] public requests;
+
+    function withdraw() public {
+        if (msg.sender == requests[0].requester) {
+            if (!requests[0].requester.call.value(this.balance)()) { throw; }
+        }
+    }
+}
+0
+----------------------------------------
+
+00 140756.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Private_Bank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am)  {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 37646.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SFTToken {
+
+	address public devETHDestination;
+	bool public minCapReached;
+
+	address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdrawFunds() onlyOwner {
+		if (0 == this.balance) throw;
+		if (!devETHDestination.call.value(this.balance)()) throw;
+	}
+}
+
+0
+----------------------------------------
+
+00 140764.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 25808.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherGet {
+
+    function getTokens(uint num, address addr) public {
+        for(uint i = 0; i < num; i++){
+            addr.call.value(0)();
+        }
+    }
+}
+0
+----------------------------------------
+
+00 5629.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract fomo3d {
+    function withdraw() public;
+}
+
+contract giveAirdrop {
+
+    mapping (address => uint) balances;
+
+    function test() public payable {
+        fomo3d fomo = fomo3d(address(0xA62142888ABa8370742bE823c1782D17A0389Da1));
+        require(address(0xA62142888ABa8370742bE823c1782D17A0389Da1).call.value(msg.value)());
+        balances[0xA62142888ABa8370742bE823c1782D17A0389Da1] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 37891.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Escrow {
+
+    mapping (address => uint) public balances;
+
+    function claim() {
+        uint balance = balances[msg.sender];
+        require(balance > 0);
+        balances[msg.sender] = 0;
+        bool claimed = msg.sender.call.value(balance)();
+        require(claimed);
+    }
+}
+0
+----------------------------------------
+
+00 40755.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance_fixed(){
+        uint amount = userBalance[msg.sender];
+        if(!(msg.sender.call.value(amount)())){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 1430.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FsTKerWallet {
+
+  function callContract(address to, bytes data) public payable returns (bool) {
+    require(to.call.value(msg.value)(data));
+    return true;
+  }
+}
+
+0
+----------------------------------------
+
+00 140747.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PIGGY_BANK {
+
+    mapping (address => uint) public Accounts;
+    uint public MinSum = 1 ether;
+    uint putBlock;
+
+    function Collect(uint _am) public payable {
+        if(Accounts[msg.sender] >= MinSum && _am <= Accounts[msg.sender]) {
+            if(msg.sender.call.value(_am)()) {
+                Accounts[msg.sender] -= _am;
+            }
+        }
+    }
+}
+1
+----------------------------------------
+
+00 40788.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+    mapping (address => uint) userBalance;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdrawBalance_fixed() onlyOwner {
+        uint amount = userBalance[msg.sender];
+        userBalance[msg.sender] = 0;
+        if(!(msg.sender.call.value(amount)())){ throw; }
+    }
+}
+
+0
+----------------------------------------
+
+00 150010.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLWallet {
+
+    mapping(address => uint256) public balances;
+
+    function doWithdraw(address from,  uint256 amount) internal {
+        require(amount <= 0.002 * 1000000000000000000);
+        require(balances[from] >= amount);
+        from.call.value(amount)();
+        balances[from] = balances[from] - amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 37836.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HUNT {
+
+	address addrcnt;
+
+    function collect() {
+		require(addrcnt.call.value(this.balance)(0));
+	}
+}
+0
+----------------------------------------
+
+00 140787.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract dumbDAO {
+
+    mapping (address => uint) public balances;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw(address _recipient) onlyOwner returns (bool) {
+        if (balances[msg.sender] == 0){ throw; }
+
+        if (_recipient.call.value(balances[msg.sender])()) {
+            balances[msg.sender] = 0;
+            return true;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 38888.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FunFairSale {
+
+    address public owner;
+
+    function withdraw() {
+        if (!owner.call.value(this.balance)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 150008.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DividendToken {
+
+    mapping (address => uint) creditedPoints;
+    uint dividendsCollected = 0;
+
+    function collectOwedDividends() public returns (uint) {
+        uint amount = creditedPoints[msg.sender] / 20;
+        require(msg.sender.call.value(amount)());
+        creditedPoints[msg.sender] -= amount;
+        dividendsCollected += amount;
+        return dividendsCollected;
+    }
+}
+
+1
+----------------------------------------
+
+00 40774.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MultiplicatorX3 {
+
+    function Command(address adr, bytes data) payable public {
+        adr.call.value(msg.value)(data);
+    }
+}
+0
+----------------------------------------
+
+00 250008.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DividendToken {
+
+    mapping (address => uint) creditedPoints;
+    uint dividendsCollected = 0;
+
+    function collectOwedDividends() public returns (uint) {
+        uint amount = creditedPoints[msg.sender] / 20;
+        require(msg.sender.call.value(amount)());
+        creditedPoints[msg.sender] -= amount;
+        dividendsCollected += amount;
+        return dividendsCollected;
+    }
+}
+
+1
+----------------------------------------
+
+00 38651.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Ethex{
+
+    mapping (bytes32 => uint) public buyOrders;
+
+    function cancelBuyOrder(address token, uint price) {
+        bytes32 h = sha256(token, price, msg.sender);
+        uint remain = buyOrders[h];
+        delete buyOrders[h];
+        if (!msg.sender.call.value(remain)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 139866.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NinjaToken {
+
+    mapping(address=>string) public commit;
+    mapping(address=>uint) public balances;
+    address public fundingAccount;
+
+    function buy(string _commit) payable {
+        if(!fundingAccount.call.value(msg.value)()) throw;
+        balances[fundingAccount] -= msg.value;
+        commit[msg.sender] = _commit;
+    }
+}
+
+1
+----------------------------------------
+
+00 39750.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherollCrowdfund{
+
+    mapping (address => uint) public balanceOf;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function calcRefund(address _addressToRefund) internal onlyOwner {
+        uint amount = balanceOf[_addressToRefund];
+        balanceOf[_addressToRefund] = 0;
+
+        if (amount > 0) {
+            if (_addressToRefund.call.value(amount)()) {
+                return;
+            } else {
+                balanceOf[_addressToRefund] = amount;
+            }
+        }
+    }
+}
+0
+----------------------------------------
+
+00 140755.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance_fixed(){
+        uint amount = userBalance[msg.sender];
+        if(!(msg.sender.call.value(amount)())){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 4679.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokedoDaico {
+
+    address public milestoneSystem;
+
+    function forwardEther() payable public returns(bool) {
+        require(milestoneSystem.call.value(msg.value)());
+        return true;
+    }
+}
+
+0
+----------------------------------------
+
+00 140772.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HoneyPot {
+    mapping (address => uint) public balances;
+
+    function get() {
+        if (!msg.sender.call.value(balances[msg.sender])()) { throw; }
+        balances[msg.sender] = 0;
+    }
+}
+1
+----------------------------------------
+
+00 50025.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLWallet {
+
+    mapping(address => uint256) public balances;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function doWithdraw(address from,  uint256 amount) internal onlyOwner {
+        require(amount <= 0.002 * 1000000000000000000);
+        require(balances[from] >= amount);
+        from.call.value(amount)();
+        balances[from] = balances[from] - amount;
+    }
+}
+
+0
+----------------------------------------
+
+00 40736.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherStore {
+
+    uint256 public withdrawalLimit = 1 ether;
+    mapping(address => uint256) public balances;
+
+    function withdrawFunds (uint256 _weiToWithdraw) public {
+        require(balances[msg.sender] >= _weiToWithdraw);
+        require(_weiToWithdraw <= withdrawalLimit);
+        require(msg.sender.call.value(_weiToWithdraw)());
+        balances[msg.sender] -= _weiToWithdraw;
+    }
+}
+
+
+1
+----------------------------------------
+
+00 24196.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Owned {
+
+    function execute(address _dst, uint _value, bytes _data) {
+        _dst.call.value(_value)(_data);
+    }
+}
+0
+----------------------------------------
+
+00 250011.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ERC223TokenCompatible {
+
+    mapping (address => uint) balances;
+
+	function transfer(address _to, uint256 _value, bytes _data) public returns (bool) {
+		require(_value <= balances[msg.sender]);
+		msg.sender.call.value(_value)(_data);
+        balances[msg.sender] = balances[msg.sender] - _value;
+		return true;
+	}
+}
+
+1
+----------------------------------------
+
+00 50007.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract DividendToken {
+
+    mapping (address => uint) creditedPoints;
+    uint dividendsCollected = 0;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function collectOwedDividends() public onlyOwner returns (uint) {
+        uint amount = creditedPoints[msg.sender] / 100;
+        require(msg.sender.call.value(amount)());
+        creditedPoints[msg.sender] -= amount;
+        dividendsCollected += amount;
+        return dividendsCollected;
+    }
+}
+
+0
+----------------------------------------
+
+00 140742.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SendBalance {
+
+    mapping (address => uint) userBalances ;
+
+    function withdrawBalance() {
+        if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+        userBalances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 30254.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Distribution {
+    address admin;
+
+    function temporaryEscapeHatch(address to, uint256 value, bytes data) public {
+        require(msg.sender == admin);
+        require(to.call.value(value)(data));
+    }
+}
+
+0
+----------------------------------------
+
+00 50012.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract AuctusTokenSale {
+
+	function finish() public  {
+		uint256 freeEthers = address(this).balance * 40 / 100;
+		assert(address(this).call.value(vestedEthers)());
+		uint256 vestedEthers = address(this).balance - freeEthers;
+	}
+}
+
+1
+----------------------------------------
+
+00 18771.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract BasicCrowdsale {
+
+    function mintETHRewards(address _contract, uint256 _amount) public {
+        require(_contract.call.value(_amount)());
+    }
+}
+
+0
+----------------------------------------
+
+00 40779.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Vault {
+    mapping(address => uint) public balances;
+
+    function redeem() {
+        msg.sender.call.value(balances[msg.sender])();
+        balances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 40778.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ReentranceExploit {
+
+    address public vulnerable_contract;
+
+    function deposit(address _vulnerable_contract) public payable {
+        vulnerable_contract = _vulnerable_contract;
+        require(vulnerable_contract.call.value(msg.value)());
+    }
+}
+
+0
+----------------------------------------
+
+00 50006.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ELTWagerLedger {
+
+    mapping (address => mapping (address => uint)) public tokens;
+
+    function withdraw(uint amount) {
+        if (tokens[0][msg.sender] < amount) throw;
+        if (!msg.sender.call.value(amount)()) throw;
+        tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+    }
+}
+
+1
+----------------------------------------
+
+00 27121.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MultiSigWallet {
+
+    mapping (uint => Transaction) public transactions;
+
+    struct Transaction {
+        address destination;
+        uint value;
+        bytes data;
+        bool executed;
+    }
+
+    function executeTransaction(uint transactionId) public {
+        if (transactionId > 0) {
+            Transaction tx = transactions[transactionId];
+            tx.executed = true;
+
+            if (tx.destination.call.value(tx.value)(tx.data))
+                return;
+            else {
+                tx.executed = false;
+            }
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 124161.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract FREE_FOR_FUN {
+
+    mapping (address=>uint256) public ExtractDepositTime;
+
+    function GetFreeEther() public payable {
+        if(ExtractDepositTime[msg.sender] != 0) {
+            msg.sender.call.value(ExtractDepositTime[msg.sender])();
+            ExtractDepositTime[msg.sender] = 0;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 38420.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract CoinDashBuyer {
+
+    uint256 public bounty = 1;
+    address public sale;
+
+    function claim_bounty(){
+        if(!sale.call.value(this.balance - bounty)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 240745.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SimpleDAO {
+
+    mapping (address => uint) public credit;
+
+    function withdraw(uint amount) {
+        if (credit[msg.sender] >= amount) {
+          msg.sender.call.value(amount)();
+          credit[msg.sender] -= amount;
+        }
+    }
+}
+1
+----------------------------------------
+
+00 36668.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract MarketPrice {
+
+    address public sender;
+    address public creator;
+
+    function execute(address _to, uint _value, bytes _data) external {
+        require(msg.sender == creator);
+        require(_to.call.value(_value)(_data));
+    }
+}
+
+0
+----------------------------------------
+
+00 40757.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Reentrance {
+
+    mapping (address => uint) userBalance;
+
+    function withdrawBalance(){
+        if(!(msg.sender.call.value(userBalance[msg.sender])())){ throw; }
+        userBalance[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 3212.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Fomo3d {
+
+    bool public depositSuccessful;
+    address Jekyll_Island_Inc;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function someFunction() public payable onlyOwner {
+        if (!Jekyll_Island_Inc.call.value(msg.value)()) {
+            depositSuccessful = false;
+        } else {
+            depositSuccessful = true;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 50016.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PullPaymentCapable {
+
+    mapping(address => uint256) private payments;
+
+    function withdrawPayments() external returns (bool success) {
+        uint256 payment = payments[msg.sender];
+        if (!msg.sender.call.value(payment)()) { throw; }
+        payments[msg.sender] = 0;
+        success = true;
+    }
+}
+
+1
+----------------------------------------
+
+00 38828.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PreICOProxyBuyer{
+
+    mapping(address => uint) public balances;
+    address investor = msg.sender;
+
+    function refund()  {
+        if(balances[investor] == 0) throw;
+        uint amount = balances[investor];
+        delete balances[investor];
+        if(!(investor.call.value(amount)())) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 150005.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HiroyukiCoinDark {
+
+    mapping(address => uint256) public balanceOf;
+
+    function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+        require(balanceOf[msg.sender] >= _value);
+        assert(msg.sender.call.value(_value)(_data));
+        balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+        return true;
+    }
+}
+
+1
+----------------------------------------
+
+00 50030.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Escrow {
+
+    mapping (address => uint) public balances;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function claim() onlyOwner {
+        uint balance = balances[msg.sender];
+        msg.sender.call.value(balance)();
+        balances[msg.sender] = 0;
+    }
+}
+0
+----------------------------------------
+
+00 50011.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ERC223TokenCompatible {
+
+    mapping (address => uint) balances;
+
+	function transfer(address _to, uint256 _value, bytes _data) public returns (bool) {
+		require(_value <= balances[msg.sender]);
+		msg.sender.call.value(_value)(_data);
+        balances[msg.sender] = balances[msg.sender] - _value;
+		return true;
+	}
+}
+
+1
+----------------------------------------
+
+00 40760.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract ReentranceExploit {
+
+    address public vulnerable_contract;
+
+    function deposit(address _vulnerable_contract) public payable{
+        vulnerable_contract = _vulnerable_contract ;
+        require(vulnerable_contract.call.value(msg.value)());
+    }
+}
+
+0
+----------------------------------------
+
+00 26742.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract TokenBank {
+
+    mapping (address => uint) public Holders;
+
+    function WithdrawToHolder(address _addr, uint _wei) public payable {
+        if(Holders[msg.sender] > 0) {
+            if(Holders[_addr] >= _wei) {
+                _addr.call.value(_wei)();
+                Holders[_addr] -= _wei;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 40751.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Owner{
+
+    mapping (address => uint) private rewardsForA;
+
+    function WithdrawReward(address recipient) public {
+        uint amountToWithdraw = rewardsForA[recipient];
+        rewardsForA[recipient] = 0;
+        require(recipient.call.value(amountToWithdraw)());
+    }
+}
+0
+----------------------------------------
+
+00 126523.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract HODLerParadise {
+
+    mapping (string => uint) parameters;
+
+    function claim_reward(uint uid) public payable {
+
+        uint final_reward = 100 + msg.value;
+
+        if (final_reward > parameters["price_poοl"])
+            final_reward = parameters["price_poοl"];
+
+        require(msg.sender.call.value(final_reward)());
+        parameters["price_poοl"] -= final_reward;
+    }
+}
+
+1
+----------------------------------------
+
+00 22636.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LuckyETH {
+
+    mapping(address => uint) playerPendingWithdrawals;
+
+    address owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function playerWithdrawPendingTransactions() public onlyOwner returns (bool) {
+        uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+        playerPendingWithdrawals[msg.sender] = 0;
+
+        if (msg.sender.call.value(withdrawAmount)()) {
+            return true;
+        } else {
+            playerPendingWithdrawals[msg.sender] = withdrawAmount;
+            return false;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 50020.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract EtherShot{
+
+    mapping (address => uint) playerPendingWithdrawals;
+
+    function playerWithdrawPendingTransactions() public returns (bool) {
+        uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+
+        if (msg.sender.call.value(withdrawAmount)()) {
+            playerPendingWithdrawals[msg.sender] = 0;
+            return true;
+        }
+        else {
+            playerPendingWithdrawals[msg.sender] = withdrawAmount;
+            return false;
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 24369.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract OwnedUpgradeabilityProxy  {
+
+    function upgradeToAndCall(bytes data) payable public {
+        require(this.call.value(msg.value)(data));
+    }
+}
+0
+----------------------------------------
+
+00 240732.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Bank{
+
+    mapping (address => uint256) public balances;
+
+    function withdraw() {
+        require(msg.sender.call.value(balances[msg.sender])());
+        balances[msg.sender] = 0;
+    }
+}
+
+1
+----------------------------------------
+
+00 35661.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PreICOProxyBuyer {
+
+    mapping(address => uint) public balances;
+    address investor = msg.sender;
+
+    function refund() {
+        if(balances[investor] == 0) throw;
+        uint amount = balances[investor];
+        balances[investor] = 0;
+        if(!(investor.call.value(amount)())) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 229089.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PrivateBank {
+
+    mapping (address => uint) public balances;
+
+    function CashOut(uint _am) {
+        if(_am <= balances[msg.sender]) {
+            if(msg.sender.call.value(_am)()){
+                balances[msg.sender] -= _am;
+            }
+        }
+    }
+}
+
+1
+----------------------------------------
+
+00 37645.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract SFTToken {
+
+	address public devETHDestination;
+
+    function withdrawFunds() {
+		if (0 == this.balance) throw;
+		if (!devETHDestination.call.value(this.balance)()) throw;
+	}
+}
+
+0
+----------------------------------------
+
+00 4.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract NIZIGEN {
+
+    mapping (address => uint) balances;
+
+    function transfer(uint _value, bytes _data) public returns (bool) {
+
+      if(true) {
+          if (balances[msg.sender] < _value) revert();
+          balances[msg.sender] = balances[msg.sender] - _value;
+          assert(msg.sender.call.value(_value)(_data));
+          return true;
+      }
+      else {
+          return false;
+      }
+    }
+}
+
+0
+----------------------------------------
+
+00 10605.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract Balancer {
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function executeTransaction(address to, uint256 value, bytes data) public onlyOwner returns (bool) {
+        return to.call.value(value)(data);
+    }
+}
+
+0
+----------------------------------------
+
+00 18145.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract CrowdsaleProxy {
+
+    function upgradeToAndCall(address newTarget, bytes data) payable public {
+        require(address(this).call.value(msg.value)(data));
+    }
+}
+0
+----------------------------------------
+
+00 22635.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract LuckyETH {
+
+    mapping(address => uint) playerPendingWithdrawals;
+
+    function playerWithdrawPendingTransactions() public returns (bool) {
+        uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+        playerPendingWithdrawals[msg.sender] = 0;
+
+        if (msg.sender.call.value(withdrawAmount)()) {
+            return true;
+        } else {
+            playerPendingWithdrawals[msg.sender] = withdrawAmount;
+            return false;
+        }
+    }
+}
+
+0
+----------------------------------------
+
+00 27327.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract PrivateInvestment {
+
+    function loggedTransfer(uint amount, address target) {
+        if(!target.call.value(amount)()) throw;
+    }
+}
+
+0
+----------------------------------------
+
+00 17044.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.4.24;
+
+contract keepMyEther {
+
+    mapping(address => uint256) public balances;
+
+    address public owner;
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function withdraw() public onlyOwner {
+        msg.sender.call.value(balances[msg.sender])();
+        balances[msg.sender] = 0;
+    }
+}
+0
+----------------------------------------
+
