@@ -1,0 +1,47 @@
+filename .\contracts_re.txt
+mv wdnna
+vt re
+lr 0.01
+dropout 0.2
+vec_length 100
+epochs 10
+batch_size 64
+.\contracts_re.txt
+config/train_data/contracts_re_fragment_vectors.pkl
+Epoch 1/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 3s 830ms/step - accuracy: 0.3906 - loss: 0.7090
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 13ms/step - accuracy: 0.4751 - loss: 3.3638
+5/5 ━━━━━━━━━━━━━━━━━━━━ 1s 14ms/step - accuracy: 0.4867 - loss: 3.3449
+Epoch 2/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step - accuracy: 0.6875 - loss: 0.9262
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.6505 - loss: 1.0162
+Epoch 3/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 42ms/step - accuracy: 0.7031 - loss: 0.5785
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - accuracy: 0.7585 - loss: 0.5438
+Epoch 4/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 32ms/step - accuracy: 0.7344 - loss: 0.6184
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - accuracy: 0.7779 - loss: 0.4920
+Epoch 5/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step - accuracy: 0.9219 - loss: 0.3313
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - accuracy: 0.8776 - loss: 0.3412
+Epoch 6/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 35ms/step - accuracy: 0.9062 - loss: 0.2483
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - accuracy: 0.9050 - loss: 0.2564
+Epoch 7/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 36ms/step - accuracy: 0.8125 - loss: 0.3112
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.8835 - loss: 0.2454
+Epoch 8/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 36ms/step - accuracy: 0.9062 - loss: 0.2296
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - accuracy: 0.9150 - loss: 0.2072
+Epoch 9/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 36ms/step - accuracy: 0.9688 - loss: 0.1348
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.9602 - loss: 0.1501
+Epoch 10/10
+1/5 ━━━━━━━━━━━━━━━━━━━━ 0s 36ms/step - accuracy: 0.9531 - loss: 0.1457
+5/5 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.9542 - loss: 0.1488
+Accuracy:  0.8481012582778931
+False positive rate(FP):  0.225
+False negative rate(FN):  0.07692307692307693
+Recall:  0.9230769230769231
+Precision:  0.8
+F1 score:  0.8571428571428571
